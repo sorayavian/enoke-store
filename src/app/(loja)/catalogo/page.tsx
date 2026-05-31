@@ -1,0 +1,78 @@
+import type { Metadata } from "next";
+import {
+  getAllProducts,
+  listBrands,
+  listMaterials,
+  type ProductFilters,
+} from "@/lib/data/products";
+import { ProductGrid } from "@/components/product/ProductGrid";
+import { CatalogFilters } from "@/components/product/CatalogFilters";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Catálogo",
+  description:
+    "Toda a curadoria ENOKE em um só lugar. Filtre por formato, estilo, gênero, marca, material e preço.",
+};
+
+type SearchParams = {
+  [key: string]: string | string[] | undefined;
+};
+
+function parseFilters(sp: SearchParams): ProductFilters {
+  const pick = (k: string) => {
+    const v = sp[k];
+    return typeof v === "string" && v.length > 0 ? v : undefined;
+  };
+  return {
+    formato_rosto: pick("formato_rosto"),
+    estilo: pick("estilo"),
+    genero: pick("genero") as ProductFilters["genero"],
+    tipo: pick("tipo") as ProductFilters["tipo"],
+    marca: pick("marca"),
+    material: pick("material"),
+    preco_min: pick("preco_min") ? Number(pick("preco_min")) : undefined,
+    preco_max: pick("preco_max") ? Number(pick("preco_max")) : undefined,
+    q: pick("q"),
+  };
+}
+
+export default async function CatalogoPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const filters = parseFilters(searchParams);
+  const [products, brands, materials] = await Promise.all([
+    getAllProducts(filters),
+    listBrands(),
+    listMaterials(),
+  ]);
+
+  return (
+    <section className="container-page py-16 md:py-24">
+      <header className="max-w-2xl">
+        <p className="eyebrow">Catálogo</p>
+        <h1 className="mt-4 font-display text-display-lg font-light text-ink md:text-display-xl">
+          Toda a coleção.
+        </h1>
+        <p className="mt-4 text-stone-500">
+          {products.length} {products.length === 1 ? "armação" : "armações"}{" "}
+          disponíveis.
+        </p>
+      </header>
+
+      <div className="mt-16 grid gap-12 lg:grid-cols-[260px_1fr]">
+        <CatalogFilters
+          current={filters}
+          brands={brands}
+          materials={materials}
+        />
+        <div>
+          <ProductGrid products={products} />
+        </div>
+      </div>
+    </section>
+  );
+}

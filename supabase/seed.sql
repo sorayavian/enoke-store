@@ -1,0 +1,125 @@
+-- Seed declarativo: 10 produtos + categorias
+-- Execute após as migrations. Idempotente via ON CONFLICT.
+
+insert into public.categories (slug, name, description) values
+  ('grau',     'Óculos de grau', 'Armações para uso com lentes de grau'),
+  ('sol',      'Óculos de sol',  'Solares autorais com proteção UV400'),
+  ('infantil', 'Infantil',       'Coleção para crianças')
+on conflict (slug) do nothing;
+
+with cat as (
+  select id, slug from public.categories
+)
+insert into public.products (slug, code, name, brand, material, price_cents, stock, images, specs, category_id, is_active)
+values
+  ('aurora-acetato-grafite',
+   'ENK-001',
+   'Aurora',
+   'Enoke Atelier',
+   'Acetato italiano',
+   189000, 8,
+   array['/placeholders/aurora-1.svg','/placeholders/aurora-2.svg'],
+   '{"formato_rosto":["oval","coracao"],"estilo":["classico"],"genero":"feminino","tipo":"grau","lentes_compativeis":["monofocal","multifocal"],"cor":"grafite"}'::jsonb,
+   (select id from cat where slug = 'grau'),
+   true),
+
+  ('lume-titanio-bronze',
+   'ENK-002',
+   'Lume',
+   'Enoke Atelier',
+   'Titânio escovado',
+   245000, 5,
+   array['/placeholders/lume-1.svg','/placeholders/lume-2.svg'],
+   '{"formato_rosto":["quadrado","oval"],"estilo":["moderno"],"genero":"unissex","tipo":"grau","cor":"bronze"}'::jsonb,
+   (select id from cat where slug = 'grau'),
+   true),
+
+  ('volta-acetato-tartaruga',
+   'ENK-003',
+   'Volta',
+   'Cinque Terre',
+   'Acetato Mazzucchelli',
+   198000, 12,
+   array['/placeholders/volta-1.svg','/placeholders/volta-2.svg'],
+   '{"formato_rosto":["redondo","oval"],"estilo":["vintage","classico"],"genero":"masculino","tipo":"sol","cor":"tartaruga"}'::jsonb,
+   (select id from cat where slug = 'sol'),
+   true),
+
+  ('siena-metal-dourado',
+   'ENK-004',
+   'Siena',
+   'Cinque Terre',
+   'Metal',
+   175000, 9,
+   array['/placeholders/siena-1.svg','/placeholders/siena-2.svg'],
+   '{"formato_rosto":["coracao","oval"],"estilo":["classico"],"genero":"feminino","tipo":"sol","cor":"dourado"}'::jsonb,
+   (select id from cat where slug = 'sol'),
+   true),
+
+  ('orto-aviador-prata',
+   'ENK-005',
+   'Orto',
+   'Maison Ortolani',
+   'Aço inoxidável',
+   289000, 4,
+   array['/placeholders/orto-1.svg','/placeholders/orto-2.svg'],
+   '{"formato_rosto":["oval","diamante"],"estilo":["classico","moderno"],"genero":"masculino","tipo":"sol","cor":"prata"}'::jsonb,
+   (select id from cat where slug = 'sol'),
+   true),
+
+  ('petra-acetato-creme',
+   'ENK-006',
+   'Petra',
+   'Enoke Atelier',
+   'Acetato italiano',
+   215000, 6,
+   array['/placeholders/petra-1.svg','/placeholders/petra-2.svg'],
+   '{"formato_rosto":["redondo","oval"],"estilo":["moderno"],"genero":"feminino","tipo":"grau","cor":"creme"}'::jsonb,
+   (select id from cat where slug = 'grau'),
+   true),
+
+  ('mira-titanio-negro',
+   'ENK-007',
+   'Mira',
+   'Maison Ortolani',
+   'Titânio',
+   325000, 3,
+   array['/placeholders/mira-1.svg','/placeholders/mira-2.svg'],
+   '{"formato_rosto":["quadrado","diamante"],"estilo":["moderno"],"genero":"unissex","tipo":"ambos","cor":"negro"}'::jsonb,
+   (select id from cat where slug = 'grau'),
+   true),
+
+  ('alba-acetato-mel',
+   'ENK-008',
+   'Alba',
+   'Cinque Terre',
+   'Acetato',
+   168000, 14,
+   array['/placeholders/alba-1.svg','/placeholders/alba-2.svg'],
+   '{"formato_rosto":["coracao","oval"],"estilo":["vintage"],"genero":"feminino","tipo":"sol","cor":"mel"}'::jsonb,
+   (select id from cat where slug = 'sol'),
+   true),
+
+  ('porto-acetato-azul',
+   'ENK-009',
+   'Porto',
+   'Enoke Atelier',
+   'Bio-acetato',
+   199000, 7,
+   array['/placeholders/porto-1.svg','/placeholders/porto-2.svg'],
+   '{"formato_rosto":["quadrado","oval"],"estilo":["moderno"],"genero":"masculino","tipo":"grau","cor":"azul"}'::jsonb,
+   (select id from cat where slug = 'grau'),
+   true),
+
+  ('nido-infantil-coral',
+   'ENK-010',
+   'Nido',
+   'Piccolo',
+   'TR-90 flexível',
+   89000, 20,
+   array['/placeholders/nido-1.svg','/placeholders/nido-2.svg'],
+   '{"formato_rosto":["redondo"],"estilo":["moderno"],"genero":"unissex","tipo":"grau","cor":"coral"}'::jsonb,
+   (select id from cat where slug = 'infantil'),
+   true)
+
+on conflict (slug) do nothing;

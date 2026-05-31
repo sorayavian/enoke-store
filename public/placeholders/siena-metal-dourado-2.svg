@@ -1,0 +1,11 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000">
+  <rect width="800" height="1000" fill="#34343A"/>
+  <g transform="translate(400 500)">
+    <ellipse cx="-110" cy="0" rx="120" ry="80" fill="none" stroke="#D4B47A" stroke-width="14"/>
+    <ellipse cx="110" cy="0" rx="120" ry="80" fill="none" stroke="#D4B47A" stroke-width="14"/>
+    <path d="M -10 0 q 10 -20 20 0" fill="none" stroke="#D4B47A" stroke-width="10"/>
+    <path d="M -230 -8 q -40 0 -60 30" fill="none" stroke="#D4B47A" stroke-width="10"/>
+    <path d="M 230 -8 q 40 0 60 30" fill="none" stroke="#D4B47A" stroke-width="10"/>
+  </g>
+  <text x="400" y="940" text-anchor="middle" font-family="Georgia, serif" font-size="28" fill="#B8B8BD" font-style="italic">Siena &#183; lateral</text>
+</svg>
