@@ -1,22 +1,26 @@
 import Link from "next/link";
 
 export default function NotFound() {
+  // Renderizado fora do layout da loja (herda o body global escuro), por isso
+  // recebe um wrapper próprio claro para manter a identidade da loja.
   return (
-    <section className="container-page flex min-h-[60vh] flex-col items-center justify-center py-24 text-center">
-      <p className="eyebrow">Erro 404</p>
-      <h1 className="mt-6 font-display text-display-xl font-light text-ink">
-        Página não encontrada.
-      </h1>
-      <p className="mt-6 max-w-md text-stone-500">
-        O endereço que você acessou não existe ou foi movido. Que tal voltar
-        para a coleção?
-      </p>
-      <Link
-        href="/"
-        className="mt-12 inline-flex items-center rounded-sm bg-ink px-6 py-3 text-sm font-medium uppercase tracking-[0.04em] text-bone hover:bg-ink-deep"
-      >
-        Voltar ao início
-      </Link>
-    </section>
+    <div className="flex min-h-screen items-center justify-center bg-surface text-fg">
+      <section className="container-page flex flex-col items-center justify-center py-24 text-center">
+        <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">Erro 404</p>
+        <h1 className="mt-6 font-display text-display-xl font-semibold text-fg">
+          Página não encontrada.
+        </h1>
+        <p className="mt-6 max-w-md text-fg-muted">
+          O endereço que você acessou não existe ou foi movido. Que tal voltar
+          para a coleção?
+        </p>
+        <Link
+          href="/"
+          className="mt-12 inline-flex items-center rounded-sm bg-brand px-6 py-3 text-sm font-semibold uppercase tracking-[0.04em] text-brand-ink hover:bg-brand-deep"
+        >
+          Voltar ao início
+        </Link>
+      </section>
+    </div>
   );
 }

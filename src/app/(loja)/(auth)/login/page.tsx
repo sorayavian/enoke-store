@@ -1,53 +1,52 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import type { Metadata } from "next";
+import { getClienteAtual } from "@/lib/auth/session";
+import { LoginForm } from "../LoginForm";
 
 export const metadata: Metadata = { title: "Entrar" };
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: { next?: string; erro?: string };
+}) {
+  // Se já estiver logado, vai direto para a área do cliente.
+  const cliente = await getClienteAtual();
+  if (cliente) redirect("/cliente");
+
+  const next =
+    searchParams.next?.startsWith("/") && !searchParams.next.startsWith("//")
+      ? searchParams.next
+      : undefined;
+
+  const avisoConfirmacao = searchParams.erro === "confirmacao";
+
   return (
     <section className="container-page flex min-h-[60vh] items-center justify-center py-24">
       <div className="w-full max-w-sm">
-        <p className="eyebrow text-center">Entrar</p>
-        <h1 className="mt-3 text-center font-display text-display-lg font-light text-ink">
-          Bem-vinda.
+        <p className="text-center text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">
+          Entrar
+        </p>
+        <h1 className="mt-3 text-center font-display text-display-lg font-semibold text-fg">
+          Bem-vindo de volta.
         </h1>
 
-        <form className="mt-10 space-y-4">
-          <label className="block">
-            <span className="eyebrow">Email</span>
-            <input
-              type="email"
-              name="email"
-              required
-              autoComplete="email"
-              className="mt-2 w-full border border-mist bg-paper px-4 py-3 text-sm text-ink focus:border-ink focus:outline-none"
-            />
-          </label>
-          <label className="block">
-            <span className="eyebrow">Senha</span>
-            <input
-              type="password"
-              name="password"
-              required
-              autoComplete="current-password"
-              className="mt-2 w-full border border-mist bg-paper px-4 py-3 text-sm text-ink focus:border-ink focus:outline-none"
-            />
-          </label>
-          <button
-            type="submit"
-            disabled
-            className="mt-6 w-full rounded-sm bg-ink px-6 py-3 text-sm font-medium uppercase tracking-[0.04em] text-bone disabled:cursor-not-allowed disabled:bg-stone-300"
-          >
-            Entrar
-          </button>
-          <p className="text-center text-xs text-stone-500">
-            Autenticação real será ativada na Fase 9 (conexão Supabase).
+        {avisoConfirmacao && (
+          <p className="mt-8 rounded-sm border border-danger/40 bg-danger/5 px-4 py-3 text-center text-sm text-danger">
+            O link de confirmação é inválido ou expirou. Tente entrar ou
+            cadastre-se novamente.
           </p>
-        </form>
+        )}
 
-        <p className="mt-8 text-center text-sm text-stone-500">
+        <LoginForm next={next} />
+
+        <p className="mt-8 text-center text-sm text-fg-muted">
           Ainda não tem conta?{" "}
-          <Link href="/signup" className="text-ink underline underline-offset-4">
+          <Link
+            href={next ? `/signup?next=${encodeURIComponent(next)}` : "/signup"}
+            className="text-brand-deep underline underline-offset-4"
+          >
             Cadastre-se
           </Link>
         </p>

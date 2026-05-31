@@ -78,8 +78,8 @@ export function CatalogFilters({
       className={
         "inline-flex items-center rounded-sm border px-3 py-1.5 text-xs uppercase tracking-[0.08em] transition-colors duration-feedback " +
         (active
-          ? "border-ink bg-ink text-bone"
-          : "border-stone-100 text-stone-500 hover:border-ink hover:text-ink")
+          ? "border-brand bg-brand text-brand-ink"
+          : "border-line text-fg-muted hover:border-fg hover:text-fg")
       }
     >
       {children}
@@ -90,7 +90,7 @@ export function CatalogFilters({
     <aside className="space-y-10">
       {GROUPS.map((group) => (
         <div key={group.key}>
-          <p className="eyebrow mb-4">{group.label}</p>
+          <p className="mb-4 text-caption font-medium uppercase tracking-[0.12em] text-fg-subtle">{group.label}</p>
           <div className="flex flex-wrap gap-2">
             <Pill
               href={buildHref({ [group.key]: undefined } as Partial<ProductFilters>)}
@@ -116,7 +116,7 @@ export function CatalogFilters({
       ))}
 
       <div>
-        <p className="eyebrow mb-4">Marca</p>
+        <p className="mb-4 text-caption font-medium uppercase tracking-[0.12em] text-fg-subtle">Marca</p>
         <div className="flex flex-wrap gap-2">
           <Pill href={buildHref({ marca: undefined })} active={!current.marca}>
             Todas
@@ -134,7 +134,7 @@ export function CatalogFilters({
       </div>
 
       <div>
-        <p className="eyebrow mb-4">Material</p>
+        <p className="mb-4 text-caption font-medium uppercase tracking-[0.12em] text-fg-subtle">Material</p>
         <div className="flex flex-wrap gap-2">
           <Pill href={buildHref({ material: undefined })} active={!current.material}>
             Todos
@@ -152,7 +152,7 @@ export function CatalogFilters({
       </div>
 
       <div>
-        <p className="eyebrow mb-4">Faixa de preço</p>
+        <p className="mb-4 text-caption font-medium uppercase tracking-[0.12em] text-fg-subtle">Faixa de preço</p>
         <div className="flex flex-wrap gap-2">
           {[
             { label: "Até R$ 1.500", min: undefined, max: 1500 },
@@ -181,7 +181,7 @@ export function CatalogFilters({
       <div className="pt-4">
         <Link
           href="/catalogo"
-          className="text-xs uppercase tracking-[0.12em] text-stone-500 underline decoration-stone-100 underline-offset-4 hover:text-ink"
+          className="text-xs uppercase tracking-[0.12em] text-fg-muted underline decoration-line underline-offset-4 hover:text-brand-deep"
         >
           Limpar filtros
         </Link>

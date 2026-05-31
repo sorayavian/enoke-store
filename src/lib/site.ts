@@ -1,12 +1,12 @@
 export const SITE = {
-  name: "ENOKE",
-  fullName: "ENOKE EWEYEAR STORE",
-  tagline: "Eyewear curated for the considered.",
+  name: "Enoke",
+  fullName: "Enoke Eyewear Store",
+  tagline: "Visão e Propósito",
   description:
-    "Armações autorais e lentes sob medida. ENOKE EWEYEAR STORE — ótica de luxo com curadoria minimalista.",
+    "Um novo conceito em ótica on-line, promovendo Visão e Propósito na sua vida. Óculos de grau e de sol com curadoria, lentes sob medida e atendimento especializado.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "5511984333042",
-  email: "contato@enoke.store",
+  email: "contato@enoke.com.br",
 } as const;
 
 export const NAV = [

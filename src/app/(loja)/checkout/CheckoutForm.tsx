@@ -50,8 +50,8 @@ export function CheckoutForm() {
 
   if (items.length === 0) {
     return (
-      <div className="border border-mist py-20 text-center">
-        <p className="text-stone-500">Adicione produtos ao carrinho antes de finalizar.</p>
+      <div className="rounded-sm border border-line py-20 text-center">
+        <p className="text-fg-muted">Adicione produtos ao carrinho antes de finalizar.</p>
       </div>
     );
   }
@@ -60,69 +60,69 @@ export function CheckoutForm() {
     <form onSubmit={handleSubmit} className="grid gap-12 lg:grid-cols-[1fr_360px]">
       <div className="space-y-6">
         <fieldset className="space-y-4">
-          <legend className="eyebrow">Seus dados</legend>
+          <legend className="text-caption font-medium uppercase tracking-[0.12em] text-fg-subtle">Seus dados</legend>
           <label className="block">
-            <span className="text-xs text-stone-500">Nome completo</span>
+            <span className="text-xs text-fg-muted">Nome completo</span>
             <input
               name="name"
               required
               minLength={2}
-              className="mt-1 w-full border border-mist bg-paper px-4 py-3 text-sm focus:border-ink focus:outline-none"
+              className="mt-1 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none"
             />
           </label>
           <label className="block">
-            <span className="text-xs text-stone-500">Email</span>
+            <span className="text-xs text-fg-muted">Email</span>
             <input
               type="email"
               name="email"
               required
-              className="mt-1 w-full border border-mist bg-paper px-4 py-3 text-sm focus:border-ink focus:outline-none"
+              className="mt-1 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none"
             />
           </label>
           <label className="block">
-            <span className="text-xs text-stone-500">Telefone (opcional)</span>
+            <span className="text-xs text-fg-muted">Telefone (opcional)</span>
             <input
               name="phone"
-              className="mt-1 w-full border border-mist bg-paper px-4 py-3 text-sm focus:border-ink focus:outline-none"
+              className="mt-1 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none"
             />
           </label>
         </fieldset>
 
-        <div className="border border-amber-tint bg-amber-tint/60 p-6">
-          <p className="text-xs uppercase tracking-[0.12em] text-amber">Modo desenvolvimento</p>
-          <p className="mt-2 text-sm text-ink">
+        <div className="rounded-sm border border-brand/40 bg-brand-soft/20 p-6">
+          <p className="text-xs uppercase tracking-[0.12em] text-brand-deep">Modo desenvolvimento</p>
+          <p className="mt-2 text-sm text-fg">
             O Mercado Pago será conectado na Fase 9. Por enquanto, o checkout
             simula sucesso e redireciona para a página de confirmação.
           </p>
         </div>
 
         {error && (
-          <p className="border border-danger/40 bg-danger/5 p-4 text-sm text-danger">
+          <p className="rounded-sm border border-danger/40 bg-danger/5 p-4 text-sm text-danger">
             {error}
           </p>
         )}
       </div>
 
-      <aside className="h-fit border border-mist bg-paper p-8">
-        <p className="eyebrow">Resumo</p>
+      <aside className="h-fit rounded-sm border border-line bg-surface-alt p-8">
+        <p className="text-caption font-medium uppercase tracking-[0.12em] text-fg-subtle">Resumo</p>
         <ul className="mt-6 space-y-3 text-sm">
           {items.map((i) => (
             <li key={i.id} className="flex justify-between gap-4">
-              <span className="text-stone-500">
+              <span className="text-fg-muted">
                 {i.name} × {i.quantity}
               </span>
-              <span className="text-ink">{formatBRL(i.price_cents * i.quantity)}</span>
+              <span className="text-fg">{formatBRL(i.price_cents * i.quantity)}</span>
             </li>
           ))}
         </ul>
-        <div className="mt-6 flex justify-between border-t border-mist pt-4">
-          <p className="font-display text-xl text-ink">Total</p>
-          <p className="font-display text-xl text-ink">{formatBRL(total)}</p>
+        <div className="mt-6 flex justify-between border-t border-line pt-4">
+          <p className="font-display text-xl font-semibold text-fg">Total</p>
+          <p className="font-display text-xl font-semibold text-fg">{formatBRL(total)}</p>
         </div>
         <button
           type="submit"
           disabled={submitting}
-          className="mt-8 inline-flex w-full items-center justify-center rounded-sm bg-ink px-6 py-4 text-sm font-medium uppercase tracking-[0.04em] text-bone transition-colors duration-feedback hover:bg-ink-deep disabled:bg-stone-300"
+          className="mt-8 inline-flex w-full items-center justify-center rounded-sm bg-brand px-6 py-4 text-sm font-semibold uppercase tracking-[0.04em] text-brand-ink transition-colors duration-feedback hover:bg-brand-deep disabled:cursor-not-allowed disabled:bg-line disabled:text-fg-subtle"
         >
           {submitting ? "Processando..." : "Pagar"}
         </button>

@@ -2,7 +2,7 @@ import { SITE } from "@/lib/site";
 
 export function WhatsAppFab() {
   const href = `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(
-    "Olá, vim do site ENOKE e gostaria de atendimento."
+    "Olá, vim do site da Enoke e gostaria de atendimento."
   )}`;
 
   return (
@@ -11,7 +11,7 @@ export function WhatsAppFab() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Falar no WhatsApp"
-      className="group fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-ink text-bone shadow-soft transition-transform duration-ui ease-refined hover:scale-105 hover:bg-ink-deep md:bottom-8 md:right-8"
+      className="group fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-soft transition-transform duration-ui ease-refined hover:scale-105 md:bottom-8 md:right-8"
     >
       <svg
         viewBox="0 0 24 24"

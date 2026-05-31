@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Catálogo",
   description:
-    "Toda a curadoria ENOKE em um só lugar. Filtre por formato, estilo, gênero, marca, material e preço.",
+    "Toda a curadoria Enoke em um só lugar. Filtre por formato, estilo, gênero, marca, material e preço.",
 };
 
 type SearchParams = {
@@ -53,11 +53,11 @@ export default async function CatalogoPage({
   return (
     <section className="container-page py-16 md:py-24">
       <header className="max-w-2xl">
-        <p className="eyebrow">Catálogo</p>
-        <h1 className="mt-4 font-display text-display-lg font-light text-ink md:text-display-xl">
+        <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">Catálogo</p>
+        <h1 className="mt-4 font-display text-display-lg font-semibold text-fg md:text-display-xl">
           Toda a coleção.
         </h1>
-        <p className="mt-4 text-stone-500">
+        <p className="mt-4 text-fg-muted">
           {products.length} {products.length === 1 ? "armação" : "armações"}{" "}
           disponíveis.
         </p>

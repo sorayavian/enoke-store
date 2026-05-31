@@ -9,6 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // --- Tema do painel admin (escuro) — NÃO ALTERAR: o admin depende destes hex ---
         bone: "#2A2A2D",
         paper: "#34343A",
         mist: "#44444B",
@@ -29,9 +30,38 @@ const config: Config = {
         success: "#3F5E3E",
         warning: "#8A6A1F",
         danger: "#7A2E22",
+
+        // --- Identidade da loja (claro + dourado), fiel ao enoke.com.br ---
+        // Dourado da marca (usar como fundo/realce; nunca como texto pequeno sobre branco)
+        brand: {
+          DEFAULT: "#F1C40F",
+          soft: "#F5D27A",
+          deep: "#CAA20A",
+          ink: "#161616",
+        },
+        // Superfícies da loja: claras no conteúdo, escuras no header/footer
+        surface: {
+          DEFAULT: "#FFFFFF",
+          alt: "#FAF9F7",
+          dark: "#161616",
+          darkAlt: "#1A1A1A",
+        },
+        // Texto da loja
+        fg: {
+          DEFAULT: "#161616",
+          muted: "#5B5B5B",
+          subtle: "#8A8A8A",
+          onDark: "#FAF9F7",
+          onDarkMuted: "#A8A8A8",
+        },
+        // Linhas/divisórias da loja
+        line: {
+          DEFAULT: "#E7E4DF",
+          dark: "#2A2A2A",
+        },
       },
       fontFamily: {
-        display: ['var(--font-display)', 'Georgia', 'serif'],
+        display: ['var(--font-display)', 'system-ui', 'sans-serif'],
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
       },
       fontSize: {

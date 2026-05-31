@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 export default function CarrinhoPage() {
   return (
     <section className="container-page py-16 md:py-24">
-      <p className="eyebrow">Carrinho</p>
-      <h1 className="mt-4 font-display text-display-xl font-light text-ink">
+      <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">Carrinho</p>
+      <h1 className="mt-4 font-display text-display-xl font-semibold text-fg">
         Suas escolhas.
       </h1>
       <div className="mt-12">

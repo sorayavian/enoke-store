@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Manrope } from "next/font/google";
+import { Poppins, Manrope } from "next/font/google";
 import "./globals.css";
 import { SITE } from "@/lib/site";
 
-const display = Cormorant_Garamond({
+// Display: Poppins (sans geométrica) — condiz com o wordmark "Enōke" da marca.
+const display = Poppins({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });

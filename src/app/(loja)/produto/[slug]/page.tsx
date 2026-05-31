@@ -28,7 +28,7 @@ export async function generateMetadata({
   if (!product) return { title: "Produto não encontrado" };
   return {
     title: `${product.name} · ${product.brand}`,
-    description: `${product.name} em ${product.material} — armação autoral ENOKE EWEYEAR STORE.`,
+    description: `${product.name} em ${product.material} — armação Enoke Eyewear Store.`,
     openGraph: {
       title: `${product.name} · ${product.brand}`,
       description: product.material,
@@ -111,35 +111,35 @@ export default async function ProdutoPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <section className="container-page py-12 md:py-20">
-        <nav className="mb-10 text-xs uppercase tracking-[0.12em] text-stone-500">
-          <Link href="/" className="hover:text-ink">Início</Link>
+        <nav className="mb-10 text-xs uppercase tracking-[0.12em] text-fg-muted">
+          <Link href="/" className="hover:text-brand-deep">Início</Link>
           <span className="mx-2">/</span>
-          <Link href="/catalogo" className="hover:text-ink">Catálogo</Link>
+          <Link href="/catalogo" className="hover:text-brand-deep">Catálogo</Link>
           <span className="mx-2">/</span>
-          <span className="text-ink">{product.name}</span>
+          <span className="text-fg">{product.name}</span>
         </nav>
 
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
           <ProductGallery images={product.images} productName={product.name} />
 
           <div>
-            <p className="eyebrow">{product.brand}</p>
-            <h1 className="mt-3 font-display text-display-xl font-light leading-none text-ink">
+            <p className="text-caption font-medium uppercase tracking-[0.12em] text-fg-subtle">{product.brand}</p>
+            <h1 className="mt-3 font-display text-display-xl font-semibold leading-none text-fg">
               {product.name}
             </h1>
-            <p className="mt-3 text-sm text-stone-500">
+            <p className="mt-3 text-sm text-fg-muted">
               Modelo {product.code}
             </p>
 
-            <p className="mt-8 font-display text-display-md text-ink">
+            <p className="mt-8 font-display text-display-md font-semibold text-fg">
               {formatBRL(product.price_cents)}
             </p>
-            <p className="mt-2 text-xs uppercase tracking-[0.12em] text-stone-500">
+            <p className="mt-2 text-xs uppercase tracking-[0.12em] text-fg-muted">
               em até 6× sem juros
             </p>
 
             {product.description && (
-              <p className="mt-8 text-sm leading-relaxed text-stone-500">
+              <p className="mt-8 text-sm leading-relaxed text-fg-muted">
                 {product.description}
               </p>
             )}
@@ -147,16 +147,16 @@ export default async function ProdutoPage({
             <div className="mt-10">
               <AddToCartButton product={product} />
               {product.stock > 0 && product.stock <= 5 && (
-                <p className="mt-4 text-xs uppercase tracking-[0.12em] text-warning">
+                <p className="mt-4 text-xs uppercase tracking-[0.12em] text-brand-deep">
                   Últimas {product.stock} peças
                 </p>
               )}
             </div>
 
-            <dl className="mt-12 divide-y divide-mist border-y border-mist">
+            <dl className="mt-12 divide-y divide-line border-y border-line">
               <div className="grid grid-cols-[160px_1fr] gap-4 py-4">
-                <dt className="eyebrow self-center">Material</dt>
-                <dd className="text-sm text-ink">{product.material}</dd>
+                <dt className="self-center text-caption font-medium uppercase tracking-[0.12em] text-fg-subtle">Material</dt>
+                <dd className="text-sm text-fg">{product.material}</dd>
               </div>
               {Object.entries(product.specs).map(([key, value]) => {
                 if (!value) return null;
@@ -166,10 +166,10 @@ export default async function ProdutoPage({
                 }
                 return (
                   <div key={key} className="grid grid-cols-[160px_1fr] gap-4 py-4">
-                    <dt className="eyebrow self-center">
+                    <dt className="self-center text-caption font-medium uppercase tracking-[0.12em] text-fg-subtle">
                       {SPEC_LABELS[key] ?? key}
                     </dt>
-                    <dd className="text-sm text-ink">{fmt(value)}</dd>
+                    <dd className="text-sm text-fg">{fmt(value)}</dd>
                   </div>
                 );
               })}
@@ -177,8 +177,8 @@ export default async function ProdutoPage({
                 product.specs.ponte ||
                 product.specs.haste) && (
                 <div className="grid grid-cols-[160px_1fr] gap-4 py-4">
-                  <dt className="eyebrow self-center">Medidas</dt>
-                  <dd className="text-sm text-ink">
+                  <dt className="self-center text-caption font-medium uppercase tracking-[0.12em] text-fg-subtle">Medidas</dt>
+                  <dd className="text-sm text-fg">
                     {[
                       product.specs.largura_lente,
                       product.specs.ponte,
@@ -187,7 +187,7 @@ export default async function ProdutoPage({
                       .map((n) => (n ? `${n}` : "—"))
                       .join(" □ ")}{" "}
                     mm
-                    <span className="ml-2 text-xs text-stone-500">
+                    <span className="ml-2 text-xs text-fg-muted">
                       (lente · ponte · haste)
                     </span>
                   </dd>
@@ -195,11 +195,11 @@ export default async function ProdutoPage({
               )}
             </dl>
 
-            <details className="mt-10 border-b border-mist pb-6">
-              <summary className="cursor-pointer text-sm font-medium text-ink">
+            <details className="mt-10 border-b border-line pb-6">
+              <summary className="cursor-pointer text-sm font-medium text-fg">
                 Atendimento e entrega
               </summary>
-              <p className="mt-4 text-sm leading-relaxed text-stone-500">
+              <p className="mt-4 text-sm leading-relaxed text-fg-muted">
                 Enviamos para todo o Brasil. Receitas podem ser anexadas no
                 checkout. Dúvidas? Fale conosco no WhatsApp — atendimento
                 consultivo, sem pressa.
@@ -210,9 +210,9 @@ export default async function ProdutoPage({
       </section>
 
       {related.length > 0 && (
-        <section className="container-page border-t border-mist py-20">
-          <p className="eyebrow">Você também pode gostar</p>
-          <h2 className="mt-3 font-display text-display-md font-light text-ink">
+        <section className="container-page border-t border-line py-20">
+          <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">Você também pode gostar</p>
+          <h2 className="mt-3 font-display text-display-md font-semibold text-fg">
             Combinações próximas.
           </h2>
           <div className="mt-10">

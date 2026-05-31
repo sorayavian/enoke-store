@@ -24,9 +24,9 @@ export function ProductGallery({
             onClick={() => setActive(i)}
             aria-label={`Ver ângulo ${i + 1} de ${productName}`}
             className={cn(
-              "relative aspect-square w-20 overflow-hidden bg-mist transition-all duration-feedback",
+              "relative aspect-square w-20 overflow-hidden rounded-sm bg-surface-alt transition-all duration-feedback",
               active === i
-                ? "shadow-hairline ring-1 ring-ink"
+                ? "ring-2 ring-brand"
                 : "opacity-70 hover:opacity-100"
             )}
           >
@@ -40,7 +40,7 @@ export function ProductGallery({
           </button>
         ))}
       </div>
-      <div className="relative order-1 aspect-[4/5] w-full overflow-hidden bg-mist md:order-2">
+      <div className="relative order-1 aspect-[4/5] w-full overflow-hidden rounded-sm bg-surface-alt md:order-2">
         <Image
           key={main}
           src={main}

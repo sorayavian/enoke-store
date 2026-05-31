@@ -1,42 +1,49 @@
 import Link from "next/link";
 import { SITE } from "@/lib/site";
+import { Logo } from "@/components/brand/Logo";
 
 export function Footer() {
   const year = 2026;
   return (
-    <footer className="mt-32 border-t border-mist bg-paper">
+    <footer className="mt-32 border-t border-line-dark bg-surface-dark text-fg-onDark">
       <div className="container-page grid gap-12 py-16 md:grid-cols-4">
         <div className="md:col-span-2">
-          <p className="font-display text-display-md text-ink">{SITE.name}</p>
-          <p className="mt-3 max-w-sm text-sm text-stone-500">{SITE.tagline}</p>
+          <Logo variant="onDark" />
+          <p className="mt-4 max-w-sm text-sm text-fg-onDarkMuted">
+            {SITE.description}
+          </p>
         </div>
 
         <div>
-          <p className="eyebrow">Loja</p>
-          <ul className="mt-4 space-y-2 text-sm text-stone-500">
-            <li><Link href="/catalogo" className="hover:text-ink">Catálogo</Link></li>
-            <li><Link href="/catalogo?estilo=sol" className="hover:text-ink">Solares</Link></li>
-            <li><Link href="/catalogo?estilo=grau" className="hover:text-ink">Grau</Link></li>
+          <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand">
+            Loja
+          </p>
+          <ul className="mt-4 space-y-2 text-sm text-fg-onDarkMuted">
+            <li><Link href="/catalogo" className="transition-colors hover:text-brand">Catálogo</Link></li>
+            <li><Link href="/catalogo?estilo=sol" className="transition-colors hover:text-brand">Óculos de Sol</Link></li>
+            <li><Link href="/catalogo?estilo=grau" className="transition-colors hover:text-brand">Óculos de Grau</Link></li>
           </ul>
         </div>
 
         <div>
-          <p className="eyebrow">Conta</p>
-          <ul className="mt-4 space-y-2 text-sm text-stone-500">
-            <li><Link href="/cliente" className="hover:text-ink">Minha conta</Link></li>
-            <li><Link href="/cliente/pedidos" className="hover:text-ink">Pedidos</Link></li>
-            <li><Link href="/cliente/receitas" className="hover:text-ink">Receitas</Link></li>
+          <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand">
+            Conta
+          </p>
+          <ul className="mt-4 space-y-2 text-sm text-fg-onDarkMuted">
+            <li><Link href="/cliente" className="transition-colors hover:text-brand">Minha conta</Link></li>
+            <li><Link href="/cliente/pedidos" className="transition-colors hover:text-brand">Pedidos</Link></li>
+            <li><Link href="/cliente/receitas" className="transition-colors hover:text-brand">Receitas</Link></li>
           </ul>
         </div>
       </div>
 
-      <div className="border-t border-mist">
-        <div className="container-page flex flex-col items-start justify-between gap-2 py-6 text-xs text-stone-500 md:flex-row md:items-center">
+      <div className="border-t border-line-dark">
+        <div className="container-page flex flex-col items-start justify-between gap-2 py-6 text-xs text-fg-onDarkMuted md:flex-row md:items-center">
           <p>© {year} {SITE.fullName}. Todos os direitos reservados.</p>
           <div className="flex items-center gap-4">
             <span>{SITE.email}</span>
             {/* Acesso ao painel administrativo (uso interno do dono) */}
-            <Link href="/admin" className="hover:text-ink">
+            <Link href="/admin" className="transition-colors hover:text-brand">
               Painel administrativo
             </Link>
           </div>

@@ -10,7 +10,7 @@ export function ProductCard({ product }: { product: Product }) {
       href={`/produto/${product.slug}`}
       className="group block"
     >
-      <div className="relative aspect-[4/5] overflow-hidden bg-mist">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-surface-alt">
         <Image
           src={front}
           alt={`${product.name} — frente`}
@@ -30,13 +30,13 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
       <div className="mt-4 flex items-start justify-between gap-4">
         <div>
-          <p className="text-caption uppercase text-stone-500">{product.brand}</p>
-          <h3 className="mt-1 font-display text-xl font-medium text-ink transition-colors duration-feedback group-hover:text-ink-deep">
+          <p className="text-caption uppercase text-fg-subtle">{product.brand}</p>
+          <h3 className="mt-1 font-display text-xl font-semibold text-fg transition-colors duration-feedback group-hover:text-brand-deep">
             {product.name}
           </h3>
-          <p className="mt-1 text-sm text-stone-500">{product.material}</p>
+          <p className="mt-1 text-sm text-fg-muted">{product.material}</p>
         </div>
-        <p className="whitespace-nowrap text-sm font-semibold text-ink">
+        <p className="whitespace-nowrap text-sm font-semibold text-fg">
           {formatBRL(product.price_cents)}
         </p>
       </div>

@@ -28,7 +28,12 @@ export function AddToCartButton({ product }: { product: Product }) {
       type="button"
       onClick={handle}
       disabled={!inStock}
-      className="inline-flex w-full items-center justify-center gap-2 rounded-sm bg-ink px-6 py-4 text-sm font-medium uppercase tracking-[0.04em] text-bone transition-colors duration-feedback hover:bg-ink-deep disabled:cursor-not-allowed disabled:bg-stone-300"
+      className={
+        "inline-flex w-full items-center justify-center gap-2 rounded-sm px-6 py-4 text-sm font-semibold uppercase tracking-[0.04em] transition-colors duration-feedback disabled:cursor-not-allowed " +
+        (added
+          ? "bg-success text-white"
+          : "bg-brand text-brand-ink hover:bg-brand-deep disabled:bg-line disabled:text-fg-subtle")
+      }
     >
       {!inStock ? "Indisponível" : added ? "Adicionado ✓" : "Adicionar ao carrinho"}
     </button>

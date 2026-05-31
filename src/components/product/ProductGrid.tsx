@@ -4,9 +4,9 @@ import { ProductCard } from "./ProductCard";
 export function ProductGrid({ products }: { products: Product[] }) {
   if (products.length === 0) {
     return (
-      <div className="border border-mist py-24 text-center">
-        <p className="font-display text-display-md text-ink">Nada por aqui.</p>
-        <p className="mt-2 text-sm text-stone-500">
+      <div className="rounded-sm border border-line py-24 text-center">
+        <p className="font-display text-display-md font-semibold text-fg">Nada por aqui.</p>
+        <p className="mt-2 text-sm text-fg-muted">
           Ajuste os filtros para ver mais armações.
         </p>
       </div>
