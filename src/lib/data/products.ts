@@ -11,7 +11,7 @@ import "server-only";
 import type { Product, Category, ProductSpecs } from "@/lib/supabase/types";
 import { MOCK_PRODUCTS, MOCK_CATEGORIES } from "@/lib/mock/products";
 import { SUPABASE_CONFIGURED } from "@/lib/supabase/is-configured";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabasePublicClient } from "@/lib/supabase/public";
 
 export type ProductFilters = {
   formato_rosto?: string;
@@ -27,7 +27,7 @@ export type ProductFilters = {
 
 // Produtos só ativos, ordenados por criação (mais recentes primeiro).
 async function fetchAtivos(): Promise<Product[]> {
-  const supabase = createSupabaseServerClient();
+  const supabase = createSupabasePublicClient();
   const { data, error } = await supabase
     .from("products")
     .select("*")
@@ -56,7 +56,7 @@ export async function getAllProducts(filters: ProductFilters = {}): Promise<Prod
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   if (SUPABASE_CONFIGURED) {
-    const supabase = createSupabaseServerClient();
+    const supabase = createSupabasePublicClient();
     const { data, error } = await supabase
       .from("products")
       .select("*")
@@ -77,7 +77,7 @@ export async function getAllProductSlugs(): Promise<string[]> {
 
 export async function getCategories(): Promise<Category[]> {
   if (SUPABASE_CONFIGURED) {
-    const supabase = createSupabaseServerClient();
+    const supabase = createSupabasePublicClient();
     const { data, error } = await supabase.from("categories").select("*");
     if (!error && data) return data as Category[];
     if (error) console.error("[categories] erro Supabase:", error.message);
