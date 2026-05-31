@@ -107,7 +107,7 @@ export function ConfiguracoesClient() {
           </Campo>
           <label className="flex items-center gap-2 text-sm text-stone-500">
             <input type="checkbox" defaultChecked className="accent-amber" />
-            Sempre tentar converter dúvidas em visita à loja ou venda no site
+            Sempre tentar converter dúvidas em venda no site
           </label>
           <label className="flex items-center gap-2 text-sm text-stone-500">
             <input type="checkbox" defaultChecked className="accent-amber" />

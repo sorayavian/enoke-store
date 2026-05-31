@@ -117,7 +117,7 @@ export async function gerarDescricao(dados: DadosProduto): Promise<string> {
     partes.push(`Disponível na cor ${dados.cor.toLowerCase()}, combina com diferentes estilos e ocasiões.`);
   }
   partes.push(
-    "Acompanha garantia da ótica e pode receber lentes sob medida conforme sua receita. Experimente na loja ou compre pelo site."
+    "Acompanha garantia da ótica e pode receber lentes sob medida conforme sua receita. Compre pelo site com entrega para todo o Brasil."
   );
   return partes.join(" ");
 }
