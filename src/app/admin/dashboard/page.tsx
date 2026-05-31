@@ -14,40 +14,56 @@ import {
 } from "@/components/admin/charts";
 import {
   KPIS,
-  VENDAS_SEMANA,
   MODELOS_MAIS_BUSCADOS,
   PRODUTOS_MAIS_VENDIDOS,
   ALERTAS_ESTOQUE,
   ALERTAS_DEMANDA,
 } from "@/lib/admin/mock";
+import {
+  getDashboardData,
+  periodoValido,
+  periodoLabel,
+} from "@/lib/admin/dashboard-data";
+import { SeletorPeriodo } from "@/components/admin/SeletorPeriodo";
 import { formatBRL } from "@/lib/utils";
 
 export const metadata = { title: "Dashboard" };
 
-export default function DashboardPage() {
+export default function DashboardPage({
+  searchParams,
+}: {
+  searchParams: { periodo?: string };
+}) {
+  const periodo = periodoValido(searchParams.periodo);
+  const dados = getDashboardData(periodo);
+  const label = periodoLabel(periodo);
+
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="font-display text-display-lg text-ink-deep">Dashboard</h1>
-        <p className="mt-1 text-sm text-stone-300">
-          Visão geral da ótica · 28 de maio de 2026
-        </p>
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="font-display text-display-lg text-ink-deep">Dashboard</h1>
+          <p className="mt-1 text-sm text-stone-300">
+            Visão geral da ótica · período: {label}
+          </p>
+        </div>
+        <SeletorPeriodo atual={periodo} />
       </div>
 
       {/* KPIs */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
-          label="Vendas do dia"
-          value={formatBRL(KPIS.vendas_dia_cents)}
-          trend={KPIS.vendas_dia_variacao_pct}
-          hint="vs. ontem"
+          label={`Vendas (${label})`}
+          value={formatBRL(dados.vendas_total_cents)}
+          trend={dados.vendas_variacao_pct}
+          hint="vs. período anterior"
           icon={<DollarSign size={18} strokeWidth={1.5} />}
           accent
         />
         <StatCard
-          label="Mensagens pendentes"
-          value={String(KPIS.mensagens_pendentes)}
-          hint="aguardando resposta"
+          label="Pedidos"
+          value={String(dados.pedidos)}
+          hint={`ticket médio ${formatBRL(dados.ticket_medio_cents)}`}
           icon={<MessageCircle size={18} strokeWidth={1.5} />}
         />
         <StatCard
@@ -67,8 +83,8 @@ export default function DashboardPage() {
       {/* Gráficos principais */}
       <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
-          <CardTitle>Vendas por dia (últimos 7 dias)</CardTitle>
-          <AreaChartView data={VENDAS_SEMANA} format="brl-k" />
+          <CardTitle>Vendas · {label}</CardTitle>
+          <AreaChartView data={dados.serie_vendas} format="brl-k" />
         </Card>
 
         <Card>
@@ -97,23 +113,23 @@ export default function DashboardPage() {
           <div className="space-y-5">
             <div>
               <p className="font-display text-display-md text-ink-deep">
-                {KPIS.ia_respondidas_hoje}
+                {dados.ia_respondidas}
               </p>
-              <p className="text-sm text-stone-300">mensagens respondidas hoje</p>
+              <p className="text-sm text-stone-300">mensagens respondidas ({label})</p>
             </div>
             <div className="flex items-center gap-2">
               <TrendingUp size={18} className="text-success" strokeWidth={1.5} />
               <p className="text-sm text-ink">
                 Taxa de conversão{" "}
                 <span className="font-semibold text-success">
-                  {KPIS.ia_taxa_conversao_pct}%
+                  {dados.ia_taxa_conversao_pct}%
                 </span>
               </p>
             </div>
             <p className="text-xs leading-relaxed text-stone-300">
-              A IA respondeu automaticamente {KPIS.ia_respondidas_hoje} mensagens,
-              das quais cerca de {KPIS.ia_taxa_conversao_pct}% indicaram intenção de
-              compra ou visita à loja.
+              A IA respondeu automaticamente {dados.ia_respondidas} mensagens no
+              período, das quais cerca de {dados.ia_taxa_conversao_pct}% indicaram
+              intenção de compra.
             </p>
           </div>
         </Card>
