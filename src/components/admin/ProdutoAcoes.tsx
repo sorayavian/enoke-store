@@ -6,20 +6,44 @@ import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { excluirProduto } from "@/app/admin/estoque/actions";
 
 // Menu de três pontinhos com Editar e Excluir, por linha de produto.
+// O menu usa posição fixa (calculada a partir do botão) para não ser cortado
+// pela rolagem horizontal da tabela.
 export function ProdutoAcoes({ id, nome }: { id: string; nome: string }) {
   const router = useRouter();
   const [aberto, setAberto] = useState(false);
   const [pending, startTransition] = useTransition();
-  const ref = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{ top: number; right: number } | null>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
 
-  // Fecha o menu ao clicar fora.
+  // Fecha ao clicar fora, rolar ou redimensionar.
   useEffect(() => {
-    function fora(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setAberto(false);
+    if (!aberto) return;
+    function fechar() {
+      setAberto(false);
     }
-    document.addEventListener("mousedown", fora);
-    return () => document.removeEventListener("mousedown", fora);
-  }, []);
+    function aoClicar(e: MouseEvent) {
+      if (btnRef.current && !btnRef.current.contains(e.target as Node)) {
+        setAberto(false);
+      }
+    }
+    document.addEventListener("mousedown", aoClicar);
+    window.addEventListener("scroll", fechar, true);
+    window.addEventListener("resize", fechar);
+    return () => {
+      document.removeEventListener("mousedown", aoClicar);
+      window.removeEventListener("scroll", fechar, true);
+      window.removeEventListener("resize", fechar);
+    };
+  }, [aberto]);
+
+  function alternar() {
+    if (!aberto && btnRef.current) {
+      const r = btnRef.current.getBoundingClientRect();
+      // posiciona logo abaixo do botão, alinhado à direita da tela
+      setPos({ top: r.bottom + 4, right: window.innerWidth - r.right });
+    }
+    setAberto((v) => !v);
+  }
 
   function editar() {
     setAberto(false);
@@ -40,10 +64,11 @@ export function ProdutoAcoes({ id, nome }: { id: string; nome: string }) {
   }
 
   return (
-    <div className="relative flex justify-end" ref={ref}>
+    <>
       <button
+        ref={btnRef}
         type="button"
-        onClick={() => setAberto((v) => !v)}
+        onClick={alternar}
         disabled={pending}
         aria-label="Ações"
         className="rounded-md p-1.5 text-stone-300 transition-colors hover:bg-mist hover:text-ink disabled:opacity-50"
@@ -51,8 +76,11 @@ export function ProdutoAcoes({ id, nome }: { id: string; nome: string }) {
         <MoreVertical size={18} />
       </button>
 
-      {aberto && (
-        <div className="absolute right-0 top-9 z-10 w-40 overflow-hidden rounded-md border border-mist bg-paper shadow-modal">
+      {aberto && pos && (
+        <div
+          className="fixed z-50 w-40 overflow-hidden rounded-md border border-mist bg-paper shadow-modal"
+          style={{ top: pos.top, right: pos.right }}
+        >
           <button
             type="button"
             onClick={editar}
@@ -69,6 +97,6 @@ export function ProdutoAcoes({ id, nome }: { id: string; nome: string }) {
           </button>
         </div>
       )}
-    </div>
+    </>
   );
 }
