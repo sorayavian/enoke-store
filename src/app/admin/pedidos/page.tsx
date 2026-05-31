@@ -1,11 +1,12 @@
 import { Card, CardTitle, Badge, StatCard } from "@/components/admin/ui";
-import { PEDIDOS } from "@/lib/admin/mock";
+import { getPedidos } from "@/lib/admin/data";
 import { ORDER_STATUS_BADGE, ORDER_STATUS_LABEL, formatDataHora } from "@/lib/admin/labels";
 import { formatBRL } from "@/lib/utils";
 
 export const metadata = { title: "Pedidos" };
 
-export default function PedidosPage() {
+export default async function PedidosPage() {
+  const PEDIDOS = await getPedidos();
   const receita = PEDIDOS.filter((p) =>
     ["paid", "shipped", "delivered"].includes(p.status)
   ).reduce((s, p) => s + p.total_cents, 0);

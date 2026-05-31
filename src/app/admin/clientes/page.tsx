@@ -1,12 +1,14 @@
 import { Card, CardTitle, StatCard } from "@/components/admin/ui";
-import { CLIENTES } from "@/lib/admin/mock";
+import { getClientes } from "@/lib/admin/data";
 import { formatBRL } from "@/lib/utils";
 
 export const metadata = { title: "Clientes" };
 
-export default function ClientesPage() {
+export default async function ClientesPage() {
+  const CLIENTES = await getClientes();
   const ltvTotal = CLIENTES.reduce((s, c) => s + c.total_gasto_cents, 0);
-  const ticketMedio = ltvTotal / CLIENTES.reduce((s, c) => s + c.pedidos, 0);
+  const totalPedidos = CLIENTES.reduce((s, c) => s + c.pedidos, 0);
+  const ticketMedio = totalPedidos > 0 ? ltvTotal / totalPedidos : 0;
 
   return (
     <div>

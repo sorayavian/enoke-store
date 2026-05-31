@@ -1,13 +1,15 @@
-import { AlertTriangle } from "lucide-react";
+import Link from "next/link";
+import { AlertTriangle, Plus } from "lucide-react";
 import { Card, CardTitle, Badge, StatCard } from "@/components/admin/ui";
-import { MOCK_PRODUCTS } from "@/lib/mock/products";
+import { getAllProducts } from "@/lib/data/products";
 import { ESTOQUE_MINIMO_PADRAO } from "@/lib/admin/mock";
 import { formatBRL } from "@/lib/utils";
 
 export const metadata = { title: "Estoque" };
 
-export default function EstoquePage() {
-  const produtos = [...MOCK_PRODUCTS].sort((a, b) => a.stock - b.stock);
+export default async function EstoquePage() {
+  const todos = await getAllProducts();
+  const produtos = [...todos].sort((a, b) => a.stock - b.stock);
   const baixos = produtos.filter((p) => p.stock <= ESTOQUE_MINIMO_PADRAO);
   const valorTotal = produtos.reduce(
     (s, p) => s + p.price_cents * p.stock,
@@ -16,11 +18,19 @@ export default function EstoquePage() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="font-display text-display-lg text-ink-deep">Estoque</h1>
-        <p className="mt-1 text-sm text-stone-300">
-          Controle de estoque com alerta automático abaixo do mínimo
-        </p>
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="font-display text-display-lg text-ink-deep">Estoque</h1>
+          <p className="mt-1 text-sm text-stone-300">
+            Controle de estoque com alerta automático abaixo do mínimo
+          </p>
+        </div>
+        <Link
+          href="/admin/estoque/novo"
+          className="flex items-center gap-2 self-start rounded-md bg-amber px-4 py-2 text-sm font-medium text-bone transition-opacity hover:opacity-90"
+        >
+          <Plus size={16} /> Novo produto
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">

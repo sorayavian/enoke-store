@@ -57,9 +57,13 @@ export type Database = {
           email: string;
           full_name: string | null;
           phone: string | null;
+          role: "customer" | "admin";
           created_at: string;
         };
-        Insert: Database["public"]["Tables"]["customers"]["Row"];
+        Insert: Omit<Database["public"]["Tables"]["customers"]["Row"], "role" | "created_at"> & {
+          role?: "customer" | "admin";
+          created_at?: string;
+        };
         Update: Partial<Database["public"]["Tables"]["customers"]["Row"]>;
       };
       orders: {
@@ -121,6 +125,128 @@ export type Database = {
           "id" | "created_at"
         > & { id?: string; created_at?: string };
         Update: Partial<Database["public"]["Tables"]["prescriptions"]["Insert"]>;
+      };
+      conversations: {
+        Row: {
+          id: string;
+          source: "wa" | "ig";
+          customer_contact: string;
+          customer_name: string | null;
+          status: "open" | "resolved" | "escalated";
+          ai_enabled: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["conversations"]["Row"]> & {
+          source: "wa" | "ig";
+          customer_contact: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["conversations"]["Row"]>;
+      };
+      messages: {
+        Row: {
+          id: string;
+          conversation_id: string | null;
+          source: "wa" | "ig";
+          customer_contact: string;
+          content: string;
+          direction: "in" | "out";
+          classification:
+            | "reclamacao"
+            | "avaliacao"
+            | "pergunta"
+            | "intencao_compra"
+            | null;
+          ai_generated: boolean;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["messages"]["Row"]> & {
+          source: "wa" | "ig";
+          customer_contact: string;
+          content: string;
+          direction: "in" | "out";
+        };
+        Update: Partial<Database["public"]["Tables"]["messages"]["Row"]>;
+      };
+      site_errors: {
+        Row: {
+          id: string;
+          type: string;
+          path: string;
+          description: string;
+          severity: "baixa" | "media" | "alta";
+          detected_at: string;
+          resolved: boolean;
+        };
+        Insert: Partial<Database["public"]["Tables"]["site_errors"]["Row"]> & {
+          type: string;
+          path: string;
+          description: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["site_errors"]["Row"]>;
+      };
+      ai_logs: {
+        Row: {
+          id: string;
+          endpoint: string;
+          module: string;
+          input_tokens: number;
+          output_tokens: number;
+          cost_usd: number;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["ai_logs"]["Row"]> & {
+          endpoint: string;
+          module: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["ai_logs"]["Row"]>;
+      };
+      instagram_posts: {
+        Row: {
+          id: string;
+          type: "foto_produto" | "dica_saude" | "tendencia" | "promocao";
+          caption: string;
+          hashtags: string[];
+          image_url: string | null;
+          video_url: string | null;
+          product_id: string | null;
+          scheduled_at: string | null;
+          published_at: string | null;
+          status: "draft" | "scheduled" | "published" | "failed";
+          ig_post_id: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["instagram_posts"]["Row"]> & {
+          type: "foto_produto" | "dica_saude" | "tendencia" | "promocao";
+          caption: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["instagram_posts"]["Row"]>;
+      };
+      instagram_metrics: {
+        Row: {
+          id: string;
+          post_id: string | null;
+          likes: number;
+          comments: number;
+          saves: number;
+          reach: number;
+          direct_messages: number;
+          followers_gained: number;
+          collected_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["instagram_metrics"]["Row"]>;
+        Update: Partial<Database["public"]["Tables"]["instagram_metrics"]["Row"]>;
+      };
+      stock_alerts: {
+        Row: {
+          id: string;
+          product_id: string | null;
+          min_quantity: number;
+          current_quantity: number;
+          alerted_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["stock_alerts"]["Row"]>;
+        Update: Partial<Database["public"]["Tables"]["stock_alerts"]["Row"]>;
       };
     };
     Views: Record<string, never>;

@@ -1,16 +1,18 @@
 import { Card, CardTitle } from "@/components/admin/ui";
 import { DonutBreakdown, RankingBars } from "@/components/admin/charts";
 import { MensagensClient } from "./MensagensClient";
-import {
-  CONVERSAS,
-  MENSAGENS,
-  MENSAGENS_STATS,
-} from "@/lib/admin/mock";
+import { MENSAGENS_STATS } from "@/lib/admin/mock";
+import { getConversas, getMensagens } from "@/lib/admin/data";
 import type { Message } from "@/lib/admin/types";
 
 export const metadata = { title: "Mensagens" };
 
-export default function MensagensPage() {
+export default async function MensagensPage() {
+  const [CONVERSAS, MENSAGENS] = await Promise.all([
+    getConversas(),
+    getMensagens(),
+  ]);
+
   // Agrupa mensagens por conversa (no real, seria uma query por conversa).
   const mensagensPorConversa: Record<string, Message[]> = {};
   for (const m of MENSAGENS) {

@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Card, CardTitle, Badge, StatCard } from "@/components/admin/ui";
 import { InstagramSubnav } from "@/components/admin/InstagramSubnav";
-import { INSTAGRAM_POSTS, INSTAGRAM_METRICS } from "@/lib/admin/mock";
+import { getInstagramPosts, getInstagramMetrics } from "@/lib/admin/data";
+import type { InstagramPost, InstagramMetric } from "@/lib/admin/types";
 import {
   IG_POST_TYPE_LABEL,
   IG_STATUS_BADGE,
@@ -12,7 +13,11 @@ import {
 
 export const metadata = { title: "Instagram" };
 
-export default function InstagramPage() {
+export default async function InstagramPage() {
+  const [INSTAGRAM_POSTS, INSTAGRAM_METRICS] = await Promise.all([
+    getInstagramPosts(),
+    getInstagramMetrics(),
+  ]);
   const agendados = INSTAGRAM_POSTS.filter((p) => p.status === "scheduled");
   const publicados = INSTAGRAM_POSTS.filter((p) => p.status === "published");
   const rascunhos = INSTAGRAM_POSTS.filter((p) => p.status === "draft");
@@ -101,9 +106,9 @@ export default function InstagramPage() {
 
       {/* Feed de posts */}
       <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <PostColuna titulo="Rascunhos" posts={rascunhos} />
-        <PostColuna titulo="Agendados" posts={agendados} />
-        <PostColuna titulo="Publicados" posts={publicados} comMetricas />
+        <PostColuna titulo="Rascunhos" posts={rascunhos} metricas={INSTAGRAM_METRICS} />
+        <PostColuna titulo="Agendados" posts={agendados} metricas={INSTAGRAM_METRICS} />
+        <PostColuna titulo="Publicados" posts={publicados} metricas={INSTAGRAM_METRICS} comMetricas />
       </div>
     </div>
   );
@@ -112,10 +117,12 @@ export default function InstagramPage() {
 function PostColuna({
   titulo,
   posts,
+  metricas,
   comMetricas,
 }: {
   titulo: string;
-  posts: typeof INSTAGRAM_POSTS;
+  posts: InstagramPost[];
+  metricas: Record<string, InstagramMetric>;
   comMetricas?: boolean;
 }) {
   return (
@@ -128,7 +135,7 @@ function PostColuna({
           <p className="text-sm text-stone-300">Nenhum post.</p>
         )}
         {posts.map((p) => {
-          const m = INSTAGRAM_METRICS[p.id];
+          const m = metricas[p.id];
           return (
             <div
               key={p.id}

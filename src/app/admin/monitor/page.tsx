@@ -1,10 +1,6 @@
 import { AlertTriangle, CheckCircle2, Bell, Sparkles } from "lucide-react";
 import { Card, CardTitle, Badge, StatCard } from "@/components/admin/ui";
-import {
-  ERROS_SITE,
-  AI_LOGS,
-  AI_CUSTO_TOTAL_USD,
-} from "@/lib/admin/mock";
+import { getErrosSite, getAiLogs } from "@/lib/admin/data";
 import {
   ERROR_TYPE_LABEL,
   SEVERITY_BADGE,
@@ -13,7 +9,9 @@ import {
 
 export const metadata = { title: "Monitor" };
 
-export default function MonitorPage() {
+export default async function MonitorPage() {
+  const [ERROS_SITE, AI_LOGS] = await Promise.all([getErrosSite(), getAiLogs()]);
+  const AI_CUSTO_TOTAL_USD = AI_LOGS.reduce((s, l) => s + l.cost_usd, 0);
   const naoResolvidos = ERROS_SITE.filter((e) => !e.resolved);
   const alta = naoResolvidos.filter((e) => e.severity === "alta").length;
 
