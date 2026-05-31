@@ -33,7 +33,13 @@ export function Footer() {
       <div className="border-t border-mist">
         <div className="container-page flex flex-col items-start justify-between gap-2 py-6 text-xs text-stone-500 md:flex-row md:items-center">
           <p>© {year} {SITE.fullName}. Todos os direitos reservados.</p>
-          <p>{SITE.email}</p>
+          <div className="flex items-center gap-4">
+            <span>{SITE.email}</span>
+            {/* Acesso ao painel administrativo (uso interno do dono) */}
+            <Link href="/admin" className="hover:text-ink">
+              Painel administrativo
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
