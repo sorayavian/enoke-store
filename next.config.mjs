@@ -12,9 +12,11 @@ const nextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
+    // Libera o Storage do Supabase e também URLs externas coladas no cadastro.
     remotePatterns: [
       { protocol: "https", hostname: "*.supabase.co" },
       { protocol: "https", hostname: "*.supabase.in" },
+      { protocol: "https", hostname: "**" },
     ],
   },
   async headers() {
