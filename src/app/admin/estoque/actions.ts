@@ -11,6 +11,7 @@ import { revalidatePath } from "next/cache";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
 import { SUPABASE_CONFIGURED } from "@/lib/supabase/is-configured";
 import { slugify } from "@/lib/utils";
+import { gerarDescricao } from "@/lib/ai/client";
 import type { ProductSpecs } from "@/lib/supabase/types";
 
 export type ResultadoAcao = { ok: boolean; erro?: string };
@@ -56,6 +57,29 @@ export async function uploadImagem(formData: FormData): Promise<{
   return { ok: true, url: data.publicUrl };
 }
 
+/**
+ * Sugere uma descrição para o produto a partir dos dados do formulário.
+ * Chamada pelo botão "Sugerir com IA".
+ */
+export async function sugerirDescricao(dados: {
+  nome: string;
+  marca?: string;
+  material?: string;
+  genero?: string;
+  tipo?: string;
+  cor?: string;
+}): Promise<{ ok: boolean; descricao?: string; erro?: string }> {
+  if (!dados.nome?.trim()) {
+    return { ok: false, erro: "Preencha ao menos o nome do produto." };
+  }
+  try {
+    const descricao = await gerarDescricao(dados);
+    return { ok: true, descricao };
+  } catch (e) {
+    return { ok: false, erro: (e as Error).message };
+  }
+}
+
 export async function criarProduto(formData: FormData): Promise<ResultadoAcao> {
   if (!SUPABASE_CONFIGURED) {
     return { ok: false, erro: "Supabase não configurado. Adicione as variáveis de ambiente." };
@@ -70,6 +94,7 @@ export async function criarProduto(formData: FormData): Promise<ResultadoAcao> {
   const genero = String(formData.get("genero") ?? "unissex");
   const tipo = String(formData.get("tipo") ?? "grau");
   const cor = String(formData.get("cor") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim() || null;
 
   // Lista de URLs de imagem (enviada como JSON pelo formulário).
   let images: string[] = [];
@@ -98,6 +123,7 @@ export async function criarProduto(formData: FormData): Promise<ResultadoAcao> {
     name,
     brand,
     material,
+    description,
     price_cents: Math.round(precoReais * 100),
     stock,
     images,
@@ -129,6 +155,7 @@ export async function editarProduto(
   const genero = String(formData.get("genero") ?? "unissex");
   const tipo = String(formData.get("tipo") ?? "grau");
   const cor = String(formData.get("cor") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim() || null;
 
   let images: string[] = [];
   try {
@@ -156,6 +183,7 @@ export async function editarProduto(
       name,
       brand,
       material,
+      description,
       price_cents: Math.round(precoReais * 100),
       stock,
       images,

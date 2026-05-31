@@ -35,6 +35,7 @@ const make = (
   name,
   brand,
   material,
+  description: null,
   price_cents,
   stock,
   images: [`/placeholders/${slug}-1.svg`, `/placeholders/${slug}-2.svg`],

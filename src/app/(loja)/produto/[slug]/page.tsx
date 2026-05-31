@@ -138,6 +138,12 @@ export default async function ProdutoPage({
               em até 6× sem juros
             </p>
 
+            {product.description && (
+              <p className="mt-8 text-sm leading-relaxed text-stone-500">
+                {product.description}
+              </p>
+            )}
+
             <div className="mt-10">
               <AddToCartButton product={product} />
               {product.stock > 0 && product.stock <= 5 && (

@@ -1,10 +1,15 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, Link2, X, Loader2 } from "lucide-react";
+import { Upload, Link2, X, Loader2, Sparkles } from "lucide-react";
 import { Card, CardTitle } from "@/components/admin/ui";
-import { criarProduto, editarProduto, uploadImagem } from "@/app/admin/estoque/actions";
+import {
+  criarProduto,
+  editarProduto,
+  uploadImagem,
+  sugerirDescricao,
+} from "@/app/admin/estoque/actions";
 import type { Product } from "@/lib/supabase/types";
 
 const inputCls =
@@ -29,6 +34,36 @@ export function ProdutoForm({ produto }: { produto?: Product }) {
   const [imagens, setImagens] = useState<string[]>(produto?.images ?? []);
   const [enviando, setEnviando] = useState(false);
   const [urlInput, setUrlInput] = useState("");
+
+  // Descrição (controlada, para a IA poder preencher).
+  const [descricao, setDescricao] = useState(produto?.description ?? "");
+  const [sugerindo, setSugerindo] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  async function sugerirComIA() {
+    const form = formRef.current;
+    if (!form) return;
+    const val = (n: string) =>
+      (form.elements.namedItem(n) as HTMLInputElement | HTMLSelectElement | null)?.value ?? "";
+    const nome = val("name").trim();
+    if (!nome) {
+      setErro("Preencha o nome do produto antes de sugerir a descrição.");
+      return;
+    }
+    setErro(null);
+    setSugerindo(true);
+    const r = await sugerirDescricao({
+      nome,
+      marca: val("brand"),
+      material: val("material"),
+      genero: val("genero"),
+      tipo: val("tipo"),
+      cor: val("cor"),
+    });
+    setSugerindo(false);
+    if (r.ok && r.descricao) setDescricao(r.descricao);
+    else setErro(r.erro ?? "Não foi possível gerar a descrição.");
+  }
 
   async function aoEscolherArquivos(e: React.ChangeEvent<HTMLInputElement>) {
     const arquivos = Array.from(e.target.files ?? []);
@@ -77,7 +112,7 @@ export function ProdutoForm({ produto }: { produto?: Product }) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <form ref={formRef} onSubmit={onSubmit} className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <Card>
         <CardTitle>Dados do produto</CardTitle>
         <div className="space-y-4">
@@ -135,6 +170,40 @@ export function ProdutoForm({ produto }: { produto?: Product }) {
             <input name="cor" className={inputCls} placeholder="Ex.: grafite" defaultValue={produto?.specs?.cor ?? ""} />
           </Campo>
         </div>
+      </Card>
+
+      <Card className="lg:col-span-2">
+        <CardTitle
+          action={
+            <button
+              type="button"
+              onClick={sugerirComIA}
+              disabled={sugerindo}
+              className="flex items-center gap-1.5 rounded-md border border-amber/50 px-3 py-1.5 text-xs text-amber-soft transition-colors hover:bg-amber/10 disabled:opacity-60"
+            >
+              {sugerindo ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
+                <Sparkles size={14} />
+              )}
+              {sugerindo ? "Gerando…" : "Sugerir com IA"}
+            </button>
+          }
+        >
+          Descrição
+        </CardTitle>
+        <textarea
+          name="description"
+          value={descricao}
+          onChange={(e) => setDescricao(e.target.value)}
+          rows={4}
+          placeholder="Descreva o produto, ou clique em 'Sugerir com IA' para gerar automaticamente a partir dos dados acima."
+          className="w-full resize-none rounded-md border border-mist bg-bone px-3 py-2 text-sm text-ink placeholder:text-stone-300 focus:border-amber/50 focus:outline-none"
+        />
+        <p className="mt-1.5 text-xs text-stone-300">
+          A IA usa nome, marca, material, gênero e tipo para sugerir. Você pode
+          editar livremente o texto gerado.
+        </p>
       </Card>
 
       <Card className="lg:col-span-2">

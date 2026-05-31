@@ -69,6 +69,59 @@ export async function extrairIntencao(
   throw new Error("Integração Anthropic não implementada neste ambiente.");
 }
 
+export type DadosProduto = {
+  nome: string;
+  marca?: string;
+  material?: string;
+  genero?: string;
+  tipo?: string;
+  cor?: string;
+};
+
+/**
+ * Gera uma descrição de produto de ótica.
+ * Com ANTHROPIC_API_KEY: usa Claude. Sem ela: monta uma descrição-modelo
+ * a partir dos dados informados (suficiente para começar).
+ */
+export async function gerarDescricao(dados: DadosProduto): Promise<string> {
+  if (IA_CONECTADA) {
+    // TODO(produção): chamar Anthropic SDK com SYSTEM_PROMPT + os dados.
+    void SYSTEM_PROMPT;
+    throw new Error("Integração Anthropic não implementada neste ambiente.");
+  }
+
+  // ── Descrição-modelo (sem IA real) ──
+  const tipoTxt =
+    dados.tipo === "sol"
+      ? "óculos de sol"
+      : dados.tipo === "ambos"
+      ? "armação versátil para grau e solar"
+      : "óculos de grau";
+  const generoTxt =
+    dados.genero === "feminino"
+      ? "feminino"
+      : dados.genero === "masculino"
+      ? "masculino"
+      : "unissex";
+
+  const partes: string[] = [];
+  partes.push(
+    `${dados.nome}${dados.marca ? `, da ${dados.marca},` : ""} é um modelo de ${tipoTxt} de design ${generoTxt}.`
+  );
+  if (dados.material) {
+    partes.push(
+      `Confeccionado em ${dados.material.toLowerCase()}, alia leveza, conforto e durabilidade para o uso diário.`
+    );
+  }
+  if (dados.cor) {
+    partes.push(`Disponível na cor ${dados.cor.toLowerCase()}, combina com diferentes estilos e ocasiões.`);
+  }
+  partes.push(
+    "Acompanha garantia da ótica e pode receber lentes sob medida conforme sua receita. Experimente na loja ou compre pelo site."
+  );
+  return partes.join(" ");
+}
+
 /** Analisa eventos do site e retorna problemas detectados. */
 export async function monitorar(
   eventos: { type: string; path: string }[]

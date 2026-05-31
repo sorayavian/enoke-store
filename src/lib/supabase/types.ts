@@ -35,6 +35,7 @@ export type Database = {
           name: string;
           brand: string;
           material: string;
+          description: string | null;
           price_cents: number;
           stock: number;
           images: string[];
