@@ -1,14 +1,17 @@
 /**
  * Camada de dados de produtos.
  *
- * Hoje (Fases 3-8): lê dos mocks em `lib/mock/products.ts`.
- * Fase 9: troca para consultas Supabase reais — interface das funções
- * permanece idêntica, então as páginas não precisam mudar.
+ * Se o Supabase estiver configurado (ver `SUPABASE_CONFIGURED`), lê do banco
+ * real. Caso contrário, cai para os mocks em `lib/mock/products.ts` — assim o
+ * site funciona mesmo sem credenciais. A interface das funções é idêntica nos
+ * dois casos, então as páginas não mudam.
  */
 
 import "server-only";
 import type { Product, Category, ProductSpecs } from "@/lib/supabase/types";
 import { MOCK_PRODUCTS, MOCK_CATEGORIES } from "@/lib/mock/products";
+import { SUPABASE_CONFIGURED } from "@/lib/supabase/is-configured";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export type ProductFilters = {
   formato_rosto?: string;
@@ -22,34 +25,76 @@ export type ProductFilters = {
   q?: string;
 };
 
+// Produtos só ativos, ordenados por criação (mais recentes primeiro).
+async function fetchAtivos(): Promise<Product[]> {
+  const supabase = createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select("*")
+    .eq("is_active", true)
+    .order("created_at", { ascending: false });
+  if (error) {
+    console.error("[products] erro Supabase, usando mock:", error.message);
+    return MOCK_PRODUCTS;
+  }
+  return (data as Product[]) ?? [];
+}
+
+async function todosProdutos(): Promise<Product[]> {
+  return SUPABASE_CONFIGURED ? fetchAtivos() : MOCK_PRODUCTS;
+}
+
 export async function getFeaturedProducts(limit = 6): Promise<Product[]> {
-  return MOCK_PRODUCTS.slice(0, limit);
+  const produtos = await todosProdutos();
+  return produtos.slice(0, limit);
 }
 
 export async function getAllProducts(filters: ProductFilters = {}): Promise<Product[]> {
-  return MOCK_PRODUCTS.filter((p) => matchesFilters(p, filters));
+  const produtos = await todosProdutos();
+  return produtos.filter((p) => matchesFilters(p, filters));
 }
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
+  if (SUPABASE_CONFIGURED) {
+    const supabase = createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("slug", slug)
+      .eq("is_active", true)
+      .maybeSingle();
+    if (error) console.error("[products] erro Supabase:", error.message);
+    if (data) return data as Product;
+    if (!error) return null;
+  }
   return MOCK_PRODUCTS.find((p) => p.slug === slug) ?? null;
 }
 
 export async function getAllProductSlugs(): Promise<string[]> {
-  return MOCK_PRODUCTS.map((p) => p.slug);
+  const produtos = await todosProdutos();
+  return produtos.map((p) => p.slug);
 }
 
 export async function getCategories(): Promise<Category[]> {
+  if (SUPABASE_CONFIGURED) {
+    const supabase = createSupabaseServerClient();
+    const { data, error } = await supabase.from("categories").select("*");
+    if (!error && data) return data as Category[];
+    if (error) console.error("[categories] erro Supabase:", error.message);
+  }
   return MOCK_CATEGORIES;
 }
 
 export async function getRelatedProducts(productId: string, limit = 4): Promise<Product[]> {
-  const product = MOCK_PRODUCTS.find((p) => p.id === productId);
+  const produtos = await todosProdutos();
+  const product = produtos.find((p) => p.id === productId);
   if (!product) return [];
-  return MOCK_PRODUCTS
+  return produtos
     .filter((p) => p.id !== productId && p.specs.tipo === product.specs.tipo)
     .slice(0, limit);
 }
 
+// Marcas/materiais são derivados; em produção poderiam virar query distinct.
 export function listBrands(): string[] {
   return Array.from(new Set(MOCK_PRODUCTS.map((p) => p.brand))).sort();
 }
