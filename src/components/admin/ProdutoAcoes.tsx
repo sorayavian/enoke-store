@@ -14,6 +14,7 @@ export function ProdutoAcoes({ id, nome }: { id: string; nome: string }) {
   const [pending, startTransition] = useTransition();
   const [pos, setPos] = useState<{ top: number; right: number } | null>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   // Fecha ao clicar fora, rolar ou redimensionar.
   useEffect(() => {
@@ -22,9 +23,12 @@ export function ProdutoAcoes({ id, nome }: { id: string; nome: string }) {
       setAberto(false);
     }
     function aoClicar(e: MouseEvent) {
-      if (btnRef.current && !btnRef.current.contains(e.target as Node)) {
-        setAberto(false);
+      const alvo = e.target as Node;
+      // Não fecha se o clique foi no botão OU dentro do próprio menu.
+      if (btnRef.current?.contains(alvo) || menuRef.current?.contains(alvo)) {
+        return;
       }
+      setAberto(false);
     }
     document.addEventListener("mousedown", aoClicar);
     window.addEventListener("scroll", fechar, true);
@@ -53,7 +57,7 @@ export function ProdutoAcoes({ id, nome }: { id: string; nome: string }) {
   function excluir() {
     setAberto(false);
     const ok = window.confirm(
-      `Excluir o produto "${nome}"? Ele deixará de aparecer na loja.`
+      `Você tem certeza que deseja excluir esse produto?\n\n"${nome}" deixará de aparecer na loja.`
     );
     if (!ok) return;
     startTransition(async () => {
@@ -78,6 +82,7 @@ export function ProdutoAcoes({ id, nome }: { id: string; nome: string }) {
 
       {aberto && pos && (
         <div
+          ref={menuRef}
           className="fixed z-50 w-40 overflow-hidden rounded-md border border-mist bg-paper shadow-modal"
           style={{ top: pos.top, right: pos.right }}
         >
