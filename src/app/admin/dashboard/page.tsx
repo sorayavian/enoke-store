@@ -44,7 +44,7 @@ export default function DashboardPage({
         <div>
           <h1 className="font-display text-display-lg text-ink-deep">Dashboard</h1>
           <p className="mt-1 text-sm text-stone-300">
-            Visão geral da ótica · período: {label}
+            Visão geral · período: {label}
           </p>
         </div>
         <SeletorPeriodo atual={periodo} />
