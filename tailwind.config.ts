@@ -65,9 +65,10 @@ const config: Config = {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        "display-xl": ["3rem", { lineHeight: "1.05", letterSpacing: "-0.015em" }],
-        "display-lg": ["2.25rem", { lineHeight: "1.1", letterSpacing: "-0.01em" }],
-        "display-md": ["1.75rem", { lineHeight: "1.15", letterSpacing: "-0.005em" }],
+        "display-2xl": ["4.5rem", { lineHeight: "0.98", letterSpacing: "-0.03em" }],
+        "display-xl": ["3rem", { lineHeight: "1.05", letterSpacing: "-0.02em" }],
+        "display-lg": ["2.25rem", { lineHeight: "1.1", letterSpacing: "-0.015em" }],
+        "display-md": ["1.75rem", { lineHeight: "1.15", letterSpacing: "-0.01em" }],
         caption: ["0.75rem", { lineHeight: "1.4", letterSpacing: "0.12em" }],
       },
       boxShadow: {

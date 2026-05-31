@@ -22,11 +22,18 @@ export default async function ClienteLayout({
     <section className="container-page py-16 md:py-24">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">
+          <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.2em] text-brand-deep">
+            <span className="inline-block h-px w-8 bg-brand-deep" />
             Área do cliente
           </p>
-          <h1 className="mt-4 font-display text-display-xl font-semibold text-fg">
-            {primeiroNome ? `Olá, ${primeiroNome}.` : "Sua conta."}
+          <h1 className="mt-5 font-display text-display-xl font-light text-fg md:text-display-2xl">
+            {primeiroNome ? (
+              <>
+                Olá, <span className="italic text-brand-deep">{primeiroNome}</span>.
+              </>
+            ) : (
+              "Sua conta."
+            )}
           </h1>
           {cliente?.email && (
             <p className="mt-2 text-sm text-fg-muted">{cliente.email}</p>

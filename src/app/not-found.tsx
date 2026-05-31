@@ -7,8 +7,8 @@ export default function NotFound() {
     <div className="flex min-h-screen items-center justify-center bg-surface text-fg">
       <section className="container-page flex flex-col items-center justify-center py-24 text-center">
         <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">Erro 404</p>
-        <h1 className="mt-6 font-display text-display-xl font-semibold text-fg">
-          Página não encontrada.
+        <h1 className="mt-6 font-display text-display-xl font-light text-fg md:text-display-2xl">
+          Página não <span className="italic text-brand-deep">encontrada</span>.
         </h1>
         <p className="mt-6 max-w-md text-fg-muted">
           O endereço que você acessou não existe ou foi movido. Que tal voltar

@@ -26,8 +26,8 @@ export default async function SignupPage({
         <p className="text-center text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">
           Criar conta
         </p>
-        <h1 className="mt-3 text-center font-display text-display-lg font-semibold text-fg">
-          Faça parte.
+        <h1 className="mt-3 text-center font-display text-display-lg font-light text-fg">
+          Faça <span className="italic text-brand-deep">parte</span>.
         </h1>
 
         <SignupForm next={next} />

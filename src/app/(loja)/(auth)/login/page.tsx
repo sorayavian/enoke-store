@@ -28,8 +28,8 @@ export default async function LoginPage({
         <p className="text-center text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">
           Entrar
         </p>
-        <h1 className="mt-3 text-center font-display text-display-lg font-semibold text-fg">
-          Bem-vindo de volta.
+        <h1 className="mt-3 text-center font-display text-display-lg font-light text-fg">
+          Bem-vindo <span className="italic text-brand-deep">de volta</span>.
         </h1>
 
         {avisoConfirmacao && (

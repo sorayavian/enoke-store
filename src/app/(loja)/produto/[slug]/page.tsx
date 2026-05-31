@@ -123,17 +123,23 @@ export default async function ProdutoPage({
           <ProductGallery images={product.images} productName={product.name} />
 
           <div>
-            <p className="text-caption font-medium uppercase tracking-[0.12em] text-fg-subtle">{product.brand}</p>
-            <h1 className="mt-3 font-display text-display-xl font-semibold leading-none text-fg">
+            <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.18em] text-brand-deep">
+              <span className="inline-block h-px w-7 bg-brand-deep" />
+              {product.brand}
+            </p>
+            <h1 className="mt-4 font-display text-display-xl font-light italic leading-[0.95] text-fg md:text-display-2xl">
               {product.name}
             </h1>
-            <p className="mt-3 text-sm text-fg-muted">
+            <p className="mt-4 text-sm text-fg-muted">
               Modelo {product.code}
             </p>
 
-            <p className="mt-8 font-display text-display-md font-semibold text-fg">
-              {formatBRL(product.price_cents)}
-            </p>
+            <div className="mt-8 flex items-baseline gap-3">
+              <p className="font-display text-display-md font-medium text-fg">
+                {formatBRL(product.price_cents)}
+              </p>
+              <span className="rule-gold h-px w-10 self-center" />
+            </div>
             <p className="mt-2 text-xs uppercase tracking-[0.12em] text-fg-muted">
               em até 6× sem juros
             </p>
@@ -210,13 +216,18 @@ export default async function ProdutoPage({
       </section>
 
       {related.length > 0 && (
-        <section className="container-page border-t border-line py-20">
-          <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">Você também pode gostar</p>
-          <h2 className="mt-3 font-display text-display-md font-semibold text-fg">
-            Combinações próximas.
-          </h2>
-          <div className="mt-10">
-            <ProductGrid products={related} />
+        <section className="border-t border-line bg-surface-alt py-24">
+          <div className="container-page">
+            <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.2em] text-brand-deep">
+              <span className="inline-block h-px w-8 bg-brand-deep" />
+              Você também pode gostar
+            </p>
+            <h2 className="mt-4 font-display text-display-lg font-light text-fg">
+              Combinações <span className="italic text-brand-deep">próximas</span>.
+            </h2>
+            <div className="mt-12">
+              <ProductGrid products={related} />
+            </div>
           </div>
         </section>
       )}

@@ -1,19 +1,22 @@
 import type { Metadata } from "next";
-import { Poppins, Manrope } from "next/font/google";
+import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
 import { SITE } from "@/lib/site";
 
-// Display: Poppins (sans geométrica) — condiz com o wordmark "Enōke" da marca.
-const display = Poppins({
+// Display: Fraunces — serifada editorial de alto contraste, com caráter de
+// ótica de luxo. Usada nos títulos dramáticos da loja.
+const display = Fraunces({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "900"],
+  style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap",
 });
 
+// Corpo: Manrope — sans geométrica limpa e legível.
 const sans = Manrope({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-sans",
   display: "swap",
 });

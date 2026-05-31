@@ -53,11 +53,14 @@ export default async function CatalogoPage({
   return (
     <section className="container-page py-16 md:py-24">
       <header className="max-w-2xl">
-        <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">Catálogo</p>
-        <h1 className="mt-4 font-display text-display-lg font-semibold text-fg md:text-display-xl">
-          Toda a coleção.
+        <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.2em] text-brand-deep">
+          <span className="inline-block h-px w-8 bg-brand-deep" />
+          Catálogo
+        </p>
+        <h1 className="mt-5 font-display text-display-xl font-light text-fg md:text-display-2xl">
+          Toda a <span className="italic text-brand-deep">coleção</span>.
         </h1>
-        <p className="mt-4 text-fg-muted">
+        <p className="mt-5 text-fg-muted">
           {products.length} {products.length === 1 ? "armação" : "armações"}{" "}
           disponíveis.
         </p>
