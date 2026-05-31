@@ -4,7 +4,8 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, Link2, X, Loader2 } from "lucide-react";
 import { Card, CardTitle } from "@/components/admin/ui";
-import { criarProduto, uploadImagem } from "../actions";
+import { criarProduto, editarProduto, uploadImagem } from "@/app/admin/estoque/actions";
+import type { Product } from "@/lib/supabase/types";
 
 const inputCls =
   "w-full rounded-md border border-mist bg-bone px-3 py-2 text-sm text-ink placeholder:text-stone-300 focus:border-amber/50 focus:outline-none";
@@ -18,13 +19,14 @@ function Campo({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-export function NovoProdutoForm() {
+// Formulário reutilizado para criar (sem `produto`) e editar (com `produto`).
+export function ProdutoForm({ produto }: { produto?: Product }) {
   const router = useRouter();
+  const editando = Boolean(produto);
   const [pending, startTransition] = useTransition();
   const [erro, setErro] = useState<string | null>(null);
 
-  // Imagens do produto (URLs — vindas de upload ou coladas).
-  const [imagens, setImagens] = useState<string[]>([]);
+  const [imagens, setImagens] = useState<string[]>(produto?.images ?? []);
   const [enviando, setEnviando] = useState(false);
   const [urlInput, setUrlInput] = useState("");
 
@@ -37,26 +39,23 @@ export function NovoProdutoForm() {
       const fd = new FormData();
       fd.append("file", arquivo);
       const r = await uploadImagem(fd);
-      if (r.ok && r.url) {
-        setImagens((atual) => [...atual, r.url!]);
-      } else {
-        setErro(r.erro ?? "Falha no upload da imagem.");
-      }
+      if (r.ok && r.url) setImagens((a) => [...a, r.url!]);
+      else setErro(r.erro ?? "Falha no upload da imagem.");
     }
     setEnviando(false);
-    e.target.value = ""; // permite reenviar o mesmo arquivo
+    e.target.value = "";
   }
 
   function adicionarUrl() {
     const u = urlInput.trim();
     if (u) {
-      setImagens((atual) => [...atual, u]);
+      setImagens((a) => [...a, u]);
       setUrlInput("");
     }
   }
 
   function removerImagem(i: number) {
-    setImagens((atual) => atual.filter((_, idx) => idx !== i));
+    setImagens((a) => a.filter((_, idx) => idx !== i));
   }
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -65,7 +64,9 @@ export function NovoProdutoForm() {
     const fd = new FormData(e.currentTarget);
     fd.set("images", JSON.stringify(imagens));
     startTransition(async () => {
-      const r = await criarProduto(fd);
+      const r = produto
+        ? await editarProduto(produto.id, fd)
+        : await criarProduto(fd);
       if (r.ok) {
         router.push("/admin/estoque");
         router.refresh();
@@ -81,16 +82,16 @@ export function NovoProdutoForm() {
         <CardTitle>Dados do produto</CardTitle>
         <div className="space-y-4">
           <Campo label="Nome *">
-            <input name="name" className={inputCls} placeholder="Ex.: Aurora" required />
+            <input name="name" className={inputCls} placeholder="Ex.: Aurora" defaultValue={produto?.name} required />
           </Campo>
           <Campo label="Código *">
-            <input name="code" className={inputCls} placeholder="Ex.: ENK-011" required />
+            <input name="code" className={inputCls} placeholder="Ex.: ENK-011" defaultValue={produto?.code} required />
           </Campo>
           <Campo label="Marca *">
-            <input name="brand" className={inputCls} placeholder="Ex.: Enoke Atelier" required />
+            <input name="brand" className={inputCls} placeholder="Ex.: Enoke Atelier" defaultValue={produto?.brand} required />
           </Campo>
           <Campo label="Material">
-            <input name="material" className={inputCls} placeholder="Ex.: Acetato italiano" />
+            <input name="material" className={inputCls} placeholder="Ex.: Acetato italiano" defaultValue={produto?.material} />
           </Campo>
         </div>
       </Card>
@@ -100,22 +101,30 @@ export function NovoProdutoForm() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
             <Campo label="Preço (R$)">
-              <input name="price" type="number" min="0" step="0.01" className={inputCls} placeholder="1890.00" />
+              <input
+                name="price"
+                type="number"
+                min="0"
+                step="0.01"
+                className={inputCls}
+                placeholder="1890.00"
+                defaultValue={produto ? (produto.price_cents / 100).toFixed(2) : ""}
+              />
             </Campo>
             <Campo label="Estoque">
-              <input name="stock" type="number" min="0" className={inputCls} placeholder="10" />
+              <input name="stock" type="number" min="0" className={inputCls} placeholder="10" defaultValue={produto?.stock ?? ""} />
             </Campo>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <Campo label="Gênero">
-              <select name="genero" className={inputCls} defaultValue="unissex">
+              <select name="genero" className={inputCls} defaultValue={produto?.specs?.genero ?? "unissex"}>
                 <option value="feminino">Feminino</option>
                 <option value="masculino">Masculino</option>
                 <option value="unissex">Unissex</option>
               </select>
             </Campo>
             <Campo label="Tipo">
-              <select name="tipo" className={inputCls} defaultValue="grau">
+              <select name="tipo" className={inputCls} defaultValue={produto?.specs?.tipo ?? "grau"}>
                 <option value="grau">Grau</option>
                 <option value="sol">Sol</option>
                 <option value="ambos">Ambos</option>
@@ -123,7 +132,7 @@ export function NovoProdutoForm() {
             </Campo>
           </div>
           <Campo label="Cor">
-            <input name="cor" className={inputCls} placeholder="Ex.: grafite" />
+            <input name="cor" className={inputCls} placeholder="Ex.: grafite" defaultValue={produto?.specs?.cor ?? ""} />
           </Campo>
         </div>
       </Card>
@@ -131,14 +140,10 @@ export function NovoProdutoForm() {
       <Card className="lg:col-span-2">
         <CardTitle>Imagens do produto</CardTitle>
 
-        {/* Pré-visualização */}
         {imagens.length > 0 && (
           <div className="mb-4 flex flex-wrap gap-3">
             {imagens.map((url, i) => (
-              <div
-                key={`${url}-${i}`}
-                className="relative h-24 w-24 overflow-hidden rounded-md border border-mist bg-bone"
-              >
+              <div key={`${url}-${i}`} className="relative h-24 w-24 overflow-hidden rounded-md border border-mist bg-bone">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={url} alt={`Imagem ${i + 1}`} className="h-full w-full object-cover" />
                 <button
@@ -160,7 +165,6 @@ export function NovoProdutoForm() {
         )}
 
         <div className="flex flex-col gap-4 sm:flex-row">
-          {/* Upload de arquivo */}
           <label className="flex flex-1 cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed border-mist bg-bone px-4 py-6 text-sm text-stone-300 transition-colors hover:border-amber/50">
             {enviando ? (
               <Loader2 size={22} className="animate-spin text-amber-soft" />
@@ -169,17 +173,9 @@ export function NovoProdutoForm() {
             )}
             <span>{enviando ? "Enviando…" : "Enviar do computador"}</span>
             <span className="text-xs">JPG/PNG até 5 MB · pode escolher várias</span>
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              className="hidden"
-              onChange={aoEscolherArquivos}
-              disabled={enviando}
-            />
+            <input type="file" accept="image/*" multiple className="hidden" onChange={aoEscolherArquivos} disabled={enviando} />
           </label>
 
-          {/* Colar URL */}
           <div className="flex-1">
             <div className="mb-1.5 flex items-center gap-1.5 text-sm text-stone-500">
               <Link2 size={14} /> Ou cole o link de uma imagem
@@ -216,7 +212,7 @@ export function NovoProdutoForm() {
           disabled={pending}
           className="rounded-md bg-amber px-5 py-2.5 text-sm font-medium text-bone transition-opacity hover:opacity-90 disabled:opacity-60"
         >
-          {pending ? "Salvando…" : "Cadastrar produto"}
+          {pending ? "Salvando…" : editando ? "Salvar alterações" : "Cadastrar produto"}
         </button>
         {erro && <span className="text-sm text-danger">{erro}</span>}
       </div>

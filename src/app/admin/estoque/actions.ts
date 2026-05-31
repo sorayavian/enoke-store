@@ -112,6 +112,64 @@ export async function criarProduto(formData: FormData): Promise<ResultadoAcao> {
   return { ok: true };
 }
 
+export async function editarProduto(
+  id: string,
+  formData: FormData
+): Promise<ResultadoAcao> {
+  if (!SUPABASE_CONFIGURED) {
+    return { ok: false, erro: "Supabase não configurado." };
+  }
+
+  const name = String(formData.get("name") ?? "").trim();
+  const code = String(formData.get("code") ?? "").trim();
+  const brand = String(formData.get("brand") ?? "").trim();
+  const material = String(formData.get("material") ?? "").trim();
+  const precoReais = Number(formData.get("price") ?? 0);
+  const stock = Number(formData.get("stock") ?? 0);
+  const genero = String(formData.get("genero") ?? "unissex");
+  const tipo = String(formData.get("tipo") ?? "grau");
+  const cor = String(formData.get("cor") ?? "").trim();
+
+  let images: string[] = [];
+  try {
+    const parsed = JSON.parse(String(formData.get("images") ?? "[]"));
+    if (Array.isArray(parsed)) images = parsed.filter((u) => typeof u === "string");
+  } catch {
+    images = [];
+  }
+
+  if (!name || !code || !brand) {
+    return { ok: false, erro: "Preencha nome, código e marca." };
+  }
+
+  const specs: ProductSpecs = {
+    genero: genero as ProductSpecs["genero"],
+    tipo: tipo as ProductSpecs["tipo"],
+    ...(cor ? { cor } : {}),
+  };
+
+  const sb = createSupabaseServiceClient();
+  const { error } = await sb
+    .from("products")
+    .update({
+      code,
+      name,
+      brand,
+      material,
+      price_cents: Math.round(precoReais * 100),
+      stock,
+      images,
+      specs,
+    } as never)
+    .eq("id", id);
+
+  if (error) return { ok: false, erro: error.message };
+
+  revalidatePath("/admin/estoque");
+  revalidatePath("/catalogo");
+  return { ok: true };
+}
+
 export async function excluirProduto(id: string): Promise<ResultadoAcao> {
   if (!SUPABASE_CONFIGURED) {
     return { ok: false, erro: "Supabase não configurado." };

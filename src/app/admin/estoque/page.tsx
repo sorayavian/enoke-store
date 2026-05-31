@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { AlertTriangle, Plus } from "lucide-react";
 import { Card, CardTitle, Badge, StatCard } from "@/components/admin/ui";
+import { ProdutoAcoes } from "@/components/admin/ProdutoAcoes";
 import { getAllProducts } from "@/lib/data/products";
 import { ESTOQUE_MINIMO_PADRAO } from "@/lib/admin/mock";
 import { formatBRL } from "@/lib/utils";
@@ -56,7 +57,8 @@ export default async function EstoquePage() {
                 <th className="pb-2 pr-4 font-medium">Marca</th>
                 <th className="pb-2 pr-4 font-medium text-right">Preço</th>
                 <th className="pb-2 pr-4 font-medium text-right">Estoque</th>
-                <th className="pb-2 font-medium">Situação</th>
+                <th className="pb-2 pr-4 font-medium">Situação</th>
+                <th className="pb-2 font-medium text-right">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-mist/60">
@@ -75,12 +77,15 @@ export default async function EstoquePage() {
                     <td className="py-2.5 pr-4 text-right tabular-nums text-ink">
                       {p.stock}
                     </td>
-                    <td className="py-2.5">
+                    <td className="py-2.5 pr-4">
                       {baixo ? (
                         <Badge className="bg-danger/25 text-ink">Baixo</Badge>
                       ) : (
                         <Badge className="bg-success/25 text-success">OK</Badge>
                       )}
+                    </td>
+                    <td className="py-2.5 text-right">
+                      <ProdutoAcoes id={p.id} nome={p.name} />
                     </td>
                   </tr>
                 );

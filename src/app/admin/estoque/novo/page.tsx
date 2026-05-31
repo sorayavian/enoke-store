@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { NovoProdutoForm } from "./NovoProdutoForm";
+import { ProdutoForm } from "@/components/admin/ProdutoForm";
 
 export const metadata = { title: "Novo produto" };
 
@@ -19,7 +19,7 @@ export default function NovoProdutoPage() {
           Cadastre um óculos no catálogo da loja
         </p>
       </div>
-      <NovoProdutoForm />
+      <ProdutoForm />
     </div>
   );
 }

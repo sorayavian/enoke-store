@@ -70,6 +70,22 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
   return MOCK_PRODUCTS.find((p) => p.slug === slug) ?? null;
 }
 
+// Busca por id (inclui inativos) — usado na edição do admin.
+export async function getProductById(id: string): Promise<Product | null> {
+  if (SUPABASE_CONFIGURED) {
+    const supabase = createSupabasePublicClient();
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("id", id)
+      .maybeSingle();
+    if (error) console.error("[products] getProductById:", error.message);
+    if (data) return data as Product;
+    if (!error) return null;
+  }
+  return MOCK_PRODUCTS.find((p) => p.id === id) ?? null;
+}
+
 export async function getAllProductSlugs(): Promise<string[]> {
   const produtos = await todosProdutos();
   return produtos.map((p) => p.slug);
