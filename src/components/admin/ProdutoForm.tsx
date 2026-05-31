@@ -169,6 +169,45 @@ export function ProdutoForm({ produto }: { produto?: Product }) {
           <Campo label="Cor">
             <input name="cor" className={inputCls} placeholder="Ex.: grafite" defaultValue={produto?.specs?.cor ?? ""} />
           </Campo>
+
+          <div>
+            <p className="mb-1.5 text-sm text-stone-500">Medidas (mm)</p>
+            <div className="grid grid-cols-3 gap-3">
+              <Campo label="Lente">
+                <input
+                  name="largura_lente"
+                  type="number"
+                  min="0"
+                  className={inputCls}
+                  placeholder="52"
+                  defaultValue={produto?.specs?.largura_lente ?? ""}
+                />
+              </Campo>
+              <Campo label="Ponte">
+                <input
+                  name="ponte"
+                  type="number"
+                  min="0"
+                  className={inputCls}
+                  placeholder="18"
+                  defaultValue={produto?.specs?.ponte ?? ""}
+                />
+              </Campo>
+              <Campo label="Haste">
+                <input
+                  name="haste"
+                  type="number"
+                  min="0"
+                  className={inputCls}
+                  placeholder="140"
+                  defaultValue={produto?.specs?.haste ?? ""}
+                />
+              </Campo>
+            </div>
+            <p className="mt-1 text-xs text-stone-300">
+              Padrão impresso na haste: largura da lente □ ponte − haste.
+            </p>
+          </div>
         </div>
       </Card>
 

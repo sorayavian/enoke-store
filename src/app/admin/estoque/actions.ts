@@ -110,10 +110,22 @@ export async function criarProduto(formData: FormData): Promise<ResultadoAcao> {
     return { ok: false, erro: "Preencha nome, código e marca." };
   }
 
+  // Medidas (mm) — opcionais; só entram no specs se preenchidas.
+  const num = (n: string) => {
+    const v = Number(formData.get(n));
+    return Number.isFinite(v) && v > 0 ? v : undefined;
+  };
+  const larguraLente = num("largura_lente");
+  const ponte = num("ponte");
+  const haste = num("haste");
+
   const specs: ProductSpecs = {
     genero: genero as ProductSpecs["genero"],
     tipo: tipo as ProductSpecs["tipo"],
     ...(cor ? { cor } : {}),
+    ...(larguraLente ? { largura_lente: larguraLente } : {}),
+    ...(ponte ? { ponte } : {}),
+    ...(haste ? { haste } : {}),
   };
 
   const sb = createSupabaseServiceClient();
@@ -169,10 +181,22 @@ export async function editarProduto(
     return { ok: false, erro: "Preencha nome, código e marca." };
   }
 
+  // Medidas (mm) — opcionais; só entram no specs se preenchidas.
+  const num = (n: string) => {
+    const v = Number(formData.get(n));
+    return Number.isFinite(v) && v > 0 ? v : undefined;
+  };
+  const larguraLente = num("largura_lente");
+  const ponte = num("ponte");
+  const haste = num("haste");
+
   const specs: ProductSpecs = {
     genero: genero as ProductSpecs["genero"],
     tipo: tipo as ProductSpecs["tipo"],
     ...(cor ? { cor } : {}),
+    ...(larguraLente ? { largura_lente: larguraLente } : {}),
+    ...(ponte ? { ponte } : {}),
+    ...(haste ? { haste } : {}),
   };
 
   const sb = createSupabaseServiceClient();

@@ -8,6 +8,10 @@ export type ProductSpecs = {
   tipo?: "grau" | "sol" | "ambos";
   lentes_compativeis?: string[];
   cor?: string;
+  // Medidas da armação, em milímetros (padrão impresso na haste: lente□ponte-haste).
+  largura_lente?: number;
+  ponte?: number;
+  haste?: number;
 };
 
 export type Database = {

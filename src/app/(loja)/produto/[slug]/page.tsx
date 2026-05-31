@@ -160,6 +160,10 @@ export default async function ProdutoPage({
               </div>
               {Object.entries(product.specs).map(([key, value]) => {
                 if (!value) return null;
+                // Medidas têm linha própria combinada (abaixo) — pular aqui.
+                if (key === "largura_lente" || key === "ponte" || key === "haste") {
+                  return null;
+                }
                 return (
                   <div key={key} className="grid grid-cols-[160px_1fr] gap-4 py-4">
                     <dt className="eyebrow self-center">
@@ -169,6 +173,26 @@ export default async function ProdutoPage({
                   </div>
                 );
               })}
+              {(product.specs.largura_lente ||
+                product.specs.ponte ||
+                product.specs.haste) && (
+                <div className="grid grid-cols-[160px_1fr] gap-4 py-4">
+                  <dt className="eyebrow self-center">Medidas</dt>
+                  <dd className="text-sm text-ink">
+                    {[
+                      product.specs.largura_lente,
+                      product.specs.ponte,
+                      product.specs.haste,
+                    ]
+                      .map((n) => (n ? `${n}` : "—"))
+                      .join(" □ ")}{" "}
+                    mm
+                    <span className="ml-2 text-xs text-stone-500">
+                      (lente · ponte · haste)
+                    </span>
+                  </dd>
+                </div>
+              )}
             </dl>
 
             <details className="mt-10 border-b border-mist pb-6">
