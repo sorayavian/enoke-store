@@ -22,7 +22,8 @@ const SLIDES: Slide[] = [
   {
     image: "/carrossel/01-otica-online.png",
     alt: "Modelo usando óculos de sol Enoke — sua ótica on-line",
-    pos: "center 30%",
+    // Alinha pelo topo para o logo "Enoke" (canto superior) não ser cortado.
+    pos: "center top",
   },
   {
     image: "/carrossel/02-mood.png",
@@ -30,13 +31,8 @@ const SLIDES: Slide[] = [
     pos: "center 55%",
   },
   {
-    image: "/carrossel/03-armacoes.png",
+    image: "/carrossel/03-armacoes-crop.png",
     alt: "Modelos de armação Enoke — encontre o ideal para você",
-    pos: "center center",
-  },
-  {
-    image: "/carrossel/04-produto.png",
-    alt: "Armação Enoke com estojo — detalhe do produto",
     pos: "center center",
   },
   {
@@ -160,7 +156,7 @@ export function HeroCarousel() {
           >
             {/* Altura do hero — preenche o espaço; object-cover + posição
                 priorizando os óculos para não cortá-los. */}
-            <div className="relative h-[58vw] max-h-[680px] min-h-[340px] w-full">
+            <div className="relative h-[48vw] max-h-[560px] min-h-[300px] w-full">
               <Image
                 src={s.image}
                 alt={s.alt}
