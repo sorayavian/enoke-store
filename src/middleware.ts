@@ -14,7 +14,11 @@ import { ADMIN_COOKIE, validarTokenSessao } from "@/lib/admin/auth";
  *    sem ele, redireciona para /admin/login.
  */
 
-const ADMIN_PROTECTION_ON = process.env.ADMIN_PROTECTION_ENABLED === "true";
+// Fail-safe: o admin fica PROTEGIDO por padrão. Só desliga se a variável for
+// explicitamente "false" (tolera espaços/maiúsculas). Assim, valor ausente ou
+// mal preenchido nunca deixa o painel aberto por acidente.
+const ADMIN_PROTECTION_ON =
+  (process.env.ADMIN_PROTECTION_ENABLED ?? "").trim().toLowerCase() !== "false";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
