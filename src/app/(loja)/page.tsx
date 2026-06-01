@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getFeaturedProducts, getCategories } from "@/lib/data/products";
 import { ProductGrid } from "@/components/product/ProductGrid";
+import { HeroCarousel } from "@/components/product/HeroCarousel";
 import { Reveal } from "@/components/ui/Reveal";
 import { SITE } from "@/lib/site";
 
@@ -101,6 +102,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* ───────────────────────── Carrossel de destaques ───────────────────────── */}
+      <HeroCarousel />
 
       {/* ───────────────────────── Selos de confiança ───────────────────────── */}
       <section className="border-b border-line bg-surface">
