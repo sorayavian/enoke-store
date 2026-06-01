@@ -9,7 +9,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
-import { SUPABASE_CONFIGURED } from "@/lib/supabase/is-configured";
+import { SUPABASE_WRITE_CONFIGURED } from "@/lib/supabase/is-configured";
 import { slugify } from "@/lib/utils";
 import { gerarDescricao } from "@/lib/ai/client";
 import type { ProductSpecs } from "@/lib/supabase/types";
@@ -27,8 +27,8 @@ export async function uploadImagem(formData: FormData): Promise<{
   url?: string;
   erro?: string;
 }> {
-  if (!SUPABASE_CONFIGURED) {
-    return { ok: false, erro: "Supabase não configurado." };
+  if (!SUPABASE_WRITE_CONFIGURED) {
+    return { ok: false, erro: "Configure a chave de serviço do Supabase (SUPABASE_SERVICE_ROLE_KEY) para gerenciar produtos." };
   }
   const file = formData.get("file");
   if (!(file instanceof File) || file.size === 0) {
@@ -81,8 +81,8 @@ export async function sugerirDescricao(dados: {
 }
 
 export async function criarProduto(formData: FormData): Promise<ResultadoAcao> {
-  if (!SUPABASE_CONFIGURED) {
-    return { ok: false, erro: "Supabase não configurado. Adicione as variáveis de ambiente." };
+  if (!SUPABASE_WRITE_CONFIGURED) {
+    return { ok: false, erro: "Configure a chave de serviço do Supabase (SUPABASE_SERVICE_ROLE_KEY) para gerenciar produtos." };
   }
 
   const name = String(formData.get("name") ?? "").trim();
@@ -154,8 +154,8 @@ export async function editarProduto(
   id: string,
   formData: FormData
 ): Promise<ResultadoAcao> {
-  if (!SUPABASE_CONFIGURED) {
-    return { ok: false, erro: "Supabase não configurado." };
+  if (!SUPABASE_WRITE_CONFIGURED) {
+    return { ok: false, erro: "Configure a chave de serviço do Supabase (SUPABASE_SERVICE_ROLE_KEY) para gerenciar produtos." };
   }
 
   const name = String(formData.get("name") ?? "").trim();
@@ -223,8 +223,8 @@ export async function editarProduto(
 }
 
 export async function excluirProduto(id: string): Promise<ResultadoAcao> {
-  if (!SUPABASE_CONFIGURED) {
-    return { ok: false, erro: "Supabase não configurado." };
+  if (!SUPABASE_WRITE_CONFIGURED) {
+    return { ok: false, erro: "Configure a chave de serviço do Supabase (SUPABASE_SERVICE_ROLE_KEY) para gerenciar produtos." };
   }
   const sb = createSupabaseServiceClient();
   // Soft delete: marca inativo (preserva histórico de pedidos).
@@ -242,8 +242,8 @@ export async function ajustarEstoque(
   id: string,
   novoEstoque: number
 ): Promise<ResultadoAcao> {
-  if (!SUPABASE_CONFIGURED) {
-    return { ok: false, erro: "Supabase não configurado." };
+  if (!SUPABASE_WRITE_CONFIGURED) {
+    return { ok: false, erro: "Configure a chave de serviço do Supabase (SUPABASE_SERVICE_ROLE_KEY) para gerenciar produtos." };
   }
   const sb = createSupabaseServiceClient();
   const { error } = await sb
