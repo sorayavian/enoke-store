@@ -1,84 +1,52 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 
-// Carrossel de destaques da home — base em CSS Scroll Snap (swipe nativo no
-// mobile, zero dependência de slider pesado). JS só para: dot ativo, prev/next,
-// teclado e autoplay opcional (pausável e desligado em prefers-reduced-motion).
+// Carrossel-vitrine da home — exibe as imagens da campanha Enoke em tela cheia
+// do hero. As imagens já trazem seu próprio texto/identidade, então o carrossel
+// não sobrepõe texto: apenas controles discretos (setas, dots, pausar/play).
+// Base em CSS Scroll Snap (swipe nativo no mobile); JS mínimo para sincronia,
+// teclado e autoplay (pausável e desligado em prefers-reduced-motion).
 
 type Slide = {
-  eyebrow: string;
-  titulo: React.ReactNode;
-  subtitulo: string;
-  ctaLabel: string;
-  ctaHref: string;
   image: string;
   alt: string;
+  // object-position prioriza os óculos quando a imagem precisa ser cortada
+  // para preencher todo o hero (object-cover).
+  pos: string;
 };
 
 const SLIDES: Slide[] = [
   {
-    eyebrow: "Nova coleção · 2026",
-    titulo: (
-      <>
-        Visão <span className="italic text-brand">&amp; Propósito</span>
-      </>
-    ),
-    subtitulo:
-      "Armações autorais, acetato italiano e titânio escovado — curadoria para quem escolhe poucas peças e as escolhe bem.",
-    ctaLabel: "Ver catálogo",
-    ctaHref: "/catalogo",
-    image: "/placeholders/lume-titanio-bronze-1.svg",
-    alt: "Armação Lume em titânio bronze",
+    image: "/carrossel/01-otica-online.png",
+    alt: "Modelo usando óculos de sol Enoke — sua ótica on-line",
+    pos: "center 30%",
   },
   {
-    eyebrow: "Proteção com estilo",
-    titulo: (
-      <>
-        Óculos de <span className="italic text-brand">Sol</span>
-      </>
-    ),
-    subtitulo:
-      "Lentes com proteção UV e desenho que acompanha o seu olhar do dia à noite.",
-    ctaLabel: "Ver solares",
-    ctaHref: "/catalogo?estilo=sol",
-    image: "/placeholders/orto-aviador-prata-1.svg",
-    alt: "Óculos de sol modelo Orto aviador prata",
+    image: "/carrossel/02-mood.png",
+    alt: "Vários óculos Enoke — um óculos para cada mood",
+    pos: "center 55%",
   },
   {
-    eyebrow: "Engenharia & leveza",
-    titulo: (
-      <>
-        Titânio <span className="italic text-brand">essencial</span>
-      </>
-    ),
-    subtitulo:
-      "Resistência e leveza em armações que você esquece estar usando.",
-    ctaLabel: "Explorar titânio",
-    ctaHref: "/catalogo?material=Titânio",
-    image: "/placeholders/aurora-acetato-grafite-1.svg",
-    alt: "Armação Aurora em acetato grafite",
+    image: "/carrossel/03-armacoes.png",
+    alt: "Modelos de armação Enoke — encontre o ideal para você",
+    pos: "center center",
   },
   {
-    eyebrow: "Detalhe que assina",
-    titulo: (
-      <>
-        Metal <span className="italic text-brand">dourado</span>
-      </>
-    ),
-    subtitulo:
-      "Acabamento em metal com toque dourado — sofisticação discreta no rosto.",
-    ctaLabel: "Ver modelos",
-    ctaHref: "/catalogo?material=Metal",
-    image: "/placeholders/siena-metal-dourado-1.svg",
-    alt: "Armação Siena em metal dourado",
+    image: "/carrossel/04-produto.png",
+    alt: "Armação Enoke com estojo — detalhe do produto",
+    pos: "center center",
+  },
+  {
+    image: "/carrossel/05-marca.png",
+    alt: "Enoke Eyewear Store",
+    pos: "center center",
   },
 ];
 
-const AUTOPLAY_MS = 6000;
+const AUTOPLAY_MS = 5000;
 
 export function HeroCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
@@ -89,7 +57,7 @@ export function HeroCarousel() {
 
   const total = SLIDES.length;
 
-  // Respeita a preferência do usuário por menos movimento (desliga autoplay).
+  // Respeita a preferência por menos movimento (desliga o autoplay).
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => {
@@ -101,7 +69,7 @@ export function HeroCarousel() {
     return () => mq.removeEventListener("change", sync);
   }, []);
 
-  // Vai para um slide específico, rolando o track (Scroll Snap cuida do encaixe).
+  // Vai para um slide (Scroll Snap encaixa); smooth respeita reduced-motion.
   const irPara = useCallback(
     (i: number, smooth = true) => {
       const track = trackRef.current;
@@ -118,7 +86,7 @@ export function HeroCarousel() {
     [total, reduzMovimento]
   );
 
-  // Mantém o dot ativo sincronizado com a rolagem (inclui swipe manual).
+  // Mantém o dot ativo em sincronia com a rolagem (inclui swipe manual).
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
@@ -137,7 +105,7 @@ export function HeroCarousel() {
     };
   }, [total]);
 
-  // Autoplay: avança sozinho, pausa no hover/foco e respeita reduced-motion.
+  // Autoplay: avança, pausa no hover/foco, respeita reduced-motion.
   useEffect(() => {
     if (!tocando || reduzMovimento) return;
     const id = setInterval(() => {
@@ -152,7 +120,7 @@ export function HeroCarousel() {
     return () => clearInterval(id);
   }, [tocando, reduzMovimento, total, irPara]);
 
-  // Navegação por teclado (setas) quando o carrossel tem foco.
+  // Setas do teclado quando o carrossel tem foco.
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
       e.preventDefault();
@@ -166,20 +134,14 @@ export function HeroCarousel() {
   return (
     <section
       aria-roledescription="carousel"
-      aria-label="Destaques da loja"
-      className="grain relative overflow-hidden bg-surface-dark text-fg-onDark"
+      aria-label="Destaques Enoke"
+      className="relative overflow-hidden bg-surface-dark"
       onMouseEnter={() => (pausadoRef.current = true)}
       onMouseLeave={() => (pausadoRef.current = false)}
       onFocusCapture={() => (pausadoRef.current = true)}
       onBlurCapture={() => (pausadoRef.current = false)}
       onKeyDown={onKeyDown}
     >
-      {/* Brilho dourado de atmosfera */}
-      <div
-        aria-hidden
-        className="glow pointer-events-none absolute -right-40 -top-40 h-[36rem] w-[36rem] rounded-full bg-brand/20 blur-[120px]"
-      />
-
       {/* Trilho rolável — Scroll Snap horizontal */}
       <div
         ref={trackRef}
@@ -196,40 +158,18 @@ export function HeroCarousel() {
             aria-hidden={ativo !== i}
             className="relative w-full shrink-0 snap-center"
           >
-            <div className="container-page grid items-center gap-10 py-20 md:grid-cols-12 md:py-28">
-              <div className="md:col-span-7">
-                <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.22em] text-brand">
-                  <span className="inline-block h-px w-10 bg-brand" />
-                  {s.eyebrow}
-                </p>
-                <h2 className="mt-7 font-display text-[2.75rem] font-light leading-[0.98] tracking-tight md:text-display-2xl">
-                  {s.titulo}
-                </h2>
-                <p className="mt-6 max-w-md text-pretty text-fg-onDarkMuted">
-                  {s.subtitulo}
-                </p>
-                <Link
-                  href={s.ctaHref}
-                  tabIndex={ativo === i ? 0 : -1}
-                  className="group mt-10 inline-flex items-center gap-3 rounded-sm bg-brand px-8 py-4 text-sm font-semibold uppercase tracking-[0.08em] text-brand-ink transition-all duration-ui hover:gap-5 hover:bg-brand-soft"
-                >
-                  {s.ctaLabel}
-                  <span aria-hidden>→</span>
-                </Link>
-              </div>
-
-              <div className="md:col-span-5">
-                <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-sm border border-white/10 bg-white/[0.02]">
-                  <Image
-                    src={s.image}
-                    alt={s.alt}
-                    fill
-                    priority={i === 0}
-                    sizes="(min-width: 768px) 40vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-              </div>
+            {/* Altura do hero — preenche o espaço; object-cover + posição
+                priorizando os óculos para não cortá-los. */}
+            <div className="relative h-[58vw] max-h-[680px] min-h-[340px] w-full">
+              <Image
+                src={s.image}
+                alt={s.alt}
+                fill
+                priority={i === 0}
+                sizes="100vw"
+                style={{ objectPosition: s.pos }}
+                className="object-cover"
+              />
             </div>
           </div>
         ))}
@@ -240,21 +180,21 @@ export function HeroCarousel() {
         type="button"
         onClick={() => irPara(ativo - 1)}
         aria-label="Slide anterior"
-        className="absolute left-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/15 bg-surface-dark/60 p-3 text-fg-onDark backdrop-blur-sm transition-colors duration-feedback hover:border-brand hover:text-brand md:block"
+        className="absolute left-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/20 bg-black/40 p-3 text-white backdrop-blur-sm transition-colors duration-feedback hover:border-brand hover:text-brand md:block"
       >
-        <ChevronLeft size={20} strokeWidth={1.5} />
+        <ChevronLeft size={22} strokeWidth={1.5} />
       </button>
       <button
         type="button"
         onClick={() => irPara(ativo + 1)}
         aria-label="Próximo slide"
-        className="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/15 bg-surface-dark/60 p-3 text-fg-onDark backdrop-blur-sm transition-colors duration-feedback hover:border-brand hover:text-brand md:block"
+        className="absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-full border border-white/20 bg-black/40 p-3 text-white backdrop-blur-sm transition-colors duration-feedback hover:border-brand hover:text-brand md:block"
       >
-        <ChevronRight size={20} strokeWidth={1.5} />
+        <ChevronRight size={22} strokeWidth={1.5} />
       </button>
 
-      {/* Rodapé do carrossel: dots + pausar/play */}
-      <div className="relative border-t border-white/10">
+      {/* Dots + pausar/play, sobre uma faixa de leitura na base */}
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/50 to-transparent">
         <div className="container-page flex items-center justify-between gap-4 py-4">
           <div
             className="flex items-center gap-2.5"
@@ -267,13 +207,13 @@ export function HeroCarousel() {
                 type="button"
                 role="tab"
                 aria-selected={ativo === i}
-                aria-label={`Ir para o slide ${i + 1} de ${total}`}
+                aria-label={`Ir para o destaque ${i + 1} de ${total}`}
                 onClick={() => irPara(i)}
                 className={
                   "h-1.5 rounded-full transition-all duration-content ease-refined " +
                   (ativo === i
                     ? "w-8 bg-brand"
-                    : "w-3 bg-white/25 hover:bg-white/50")
+                    : "w-3 bg-white/40 hover:bg-white/70")
                 }
               />
             ))}
@@ -286,7 +226,7 @@ export function HeroCarousel() {
               aria-label={
                 tocando ? "Pausar apresentação" : "Iniciar apresentação"
               }
-              className="inline-flex items-center gap-2 rounded-sm border border-white/15 px-3 py-1.5 text-caption uppercase tracking-[0.14em] text-fg-onDarkMuted transition-colors duration-feedback hover:border-brand hover:text-brand"
+              className="inline-flex items-center gap-2 rounded-sm border border-white/25 bg-black/30 px-3 py-1.5 text-caption uppercase tracking-[0.14em] text-white/80 backdrop-blur-sm transition-colors duration-feedback hover:border-brand hover:text-brand"
             >
               {tocando ? (
                 <Pause size={13} strokeWidth={1.8} />
