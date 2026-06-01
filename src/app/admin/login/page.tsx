@@ -1,14 +1,29 @@
-import Link from "next/link";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { SITE } from "@/lib/site";
+import { ADMIN_COOKIE, validarTokenSessao } from "@/lib/admin/auth";
+import { AdminLoginForm } from "./AdminLoginForm";
 
 export const metadata = {
   title: "Entrar · Admin",
   robots: { index: false, follow: false },
 };
 
-// Página de login do painel. Visual pronto; a autenticação real (Supabase Auth
-// + verificação de role 'admin') será plugada junto com o middleware.
-export default function AdminLoginPage() {
+// Página de login do painel: acesso por senha (do dono).
+export default async function AdminLoginPage({
+  searchParams,
+}: {
+  searchParams: { next?: string };
+}) {
+  // Se já houver sessão válida, vai direto ao painel.
+  const token = cookies().get(ADMIN_COOKIE)?.value;
+  if (await validarTokenSessao(token)) redirect("/admin/dashboard");
+
+  const next =
+    searchParams.next?.startsWith("/admin") && !searchParams.next.startsWith("//")
+      ? searchParams.next
+      : undefined;
+
   return (
     <div className="flex min-h-screen items-center justify-center px-6">
       <div className="w-full max-w-sm">
@@ -21,30 +36,7 @@ export default function AdminLoginPage() {
           </p>
         </div>
 
-        <form className="space-y-4 rounded-lg border border-mist bg-paper p-6 shadow-soft">
-          <label className="block">
-            <span className="mb-1.5 block text-sm text-stone-500">E-mail</span>
-            <input
-              type="email"
-              placeholder="dono@enoke.store"
-              className="w-full rounded-md border border-mist bg-bone px-3 py-2 text-sm text-ink placeholder:text-stone-300 focus:border-amber/50 focus:outline-none"
-            />
-          </label>
-          <label className="block">
-            <span className="mb-1.5 block text-sm text-stone-500">Senha</span>
-            <input
-              type="password"
-              placeholder="••••••••"
-              className="w-full rounded-md border border-mist bg-bone px-3 py-2 text-sm text-ink placeholder:text-stone-300 focus:border-amber/50 focus:outline-none"
-            />
-          </label>
-          <Link
-            href="/admin/dashboard"
-            className="block w-full rounded-md bg-amber py-2.5 text-center text-sm font-medium text-bone transition-opacity hover:opacity-90"
-          >
-            Entrar
-          </Link>
-        </form>
+        <AdminLoginForm next={next} />
 
         <p className="mt-4 text-center text-xs text-stone-300">
           Acesso restrito ao dono da ótica.

@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { ADMIN_COOKIE, validarTokenSessao } from "@/lib/admin/auth";
 
 /**
  * Middleware da loja.
@@ -8,9 +9,9 @@ import { createServerClient } from "@supabase/ssr";
  *    sem login, redireciona para /login (preservando o destino em ?next=).
  *    Também refresca a sessão (cookies) a cada request.
  *
- * 2) /admin/*    → painel administrativo. Proteção controlada por env
- *    (ADMIN_PROTECTION_ENABLED). Integração real de role 'admin' fica para a
- *    fase do painel; aqui mantemos o comportamento existente.
+ * 2) /admin/*    → painel administrativo. Quando ADMIN_PROTECTION_ENABLED=true,
+ *    exige um cookie de sessão assinado (criado ao acertar a senha do dono);
+ *    sem ele, redireciona para /admin/login.
  */
 
 const ADMIN_PROTECTION_ON = process.env.ADMIN_PROTECTION_ENABLED === "true";
@@ -61,11 +62,18 @@ export async function middleware(req: NextRequest) {
   // ───────────────────────── Painel admin ─────────────────────────
   if (pathname.startsWith("/admin")) {
     if (!ADMIN_PROTECTION_ON) return NextResponse.next();
+    // A própria página de login não pode ser bloqueada.
     if (pathname.startsWith("/admin/login")) return NextResponse.next();
 
-    // Integração real de role 'admin' permanece pendente (ver ADMIN.md).
+    const token = req.cookies.get(ADMIN_COOKIE)?.value;
+    if (await validarTokenSessao(token)) {
+      return NextResponse.next();
+    }
+
+    // Sem sessão válida → login (preservando o destino).
     const url = req.nextUrl.clone();
     url.pathname = "/admin/login";
+    url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
   }
 

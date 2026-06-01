@@ -1,7 +1,8 @@
 "use client";
 
-import { Bell, Search } from "lucide-react";
+import { Bell, Search, LogOut } from "lucide-react";
 import { KPIS } from "@/lib/admin/mock";
+import { adminLogoutAction } from "@/app/admin/login/actions";
 
 // Barra superior do admin: busca rápida (decorativa) + alertas + perfil do dono.
 export function Topbar() {
@@ -44,6 +45,17 @@ export function Topbar() {
             <p className="text-xs text-stone-300">Acesso total</p>
           </div>
         </div>
+
+        <form action={adminLogoutAction}>
+          <button
+            type="submit"
+            aria-label="Sair do painel"
+            title="Sair"
+            className="rounded-md p-2 text-stone-300 transition-colors hover:bg-mist hover:text-ink"
+          >
+            <LogOut size={18} strokeWidth={1.5} />
+          </button>
+        </form>
       </div>
     </header>
   );
