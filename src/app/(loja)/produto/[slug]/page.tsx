@@ -112,9 +112,9 @@ export default async function ProdutoPage({
       />
       <section className="container-page py-12 md:py-20">
         <nav className="mb-10 text-xs uppercase tracking-[0.12em] text-fg-muted">
-          <Link href="/" className="hover:text-brand-deep">Início</Link>
+          <Link href="/" className="hover:text-brand-text">Início</Link>
           <span className="mx-2">/</span>
-          <Link href="/catalogo" className="hover:text-brand-deep">Catálogo</Link>
+          <Link href="/catalogo" className="hover:text-brand-text">Catálogo</Link>
           <span className="mx-2">/</span>
           <span className="text-fg">{product.name}</span>
         </nav>
@@ -123,7 +123,7 @@ export default async function ProdutoPage({
           <ProductGallery images={product.images} productName={product.name} />
 
           <div>
-            <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.18em] text-brand-deep">
+            <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.18em] text-brand-text">
               <span className="inline-block h-px w-7 bg-brand-deep" />
               {product.brand}
             </p>
@@ -153,7 +153,7 @@ export default async function ProdutoPage({
             <div className="mt-10">
               <AddToCartButton product={product} />
               {product.stock > 0 && product.stock <= 5 && (
-                <p className="mt-4 text-xs uppercase tracking-[0.12em] text-brand-deep">
+                <p className="mt-4 text-xs uppercase tracking-[0.12em] text-brand-text">
                   Últimas {product.stock} peças
                 </p>
               )}
@@ -218,7 +218,7 @@ export default async function ProdutoPage({
       {related.length > 0 && (
         <section className="border-t border-line bg-surface-alt py-24">
           <div className="container-page">
-            <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.2em] text-brand-deep">
+            <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.2em] text-brand-text">
               <span className="inline-block h-px w-8 bg-brand-deep" />
               Você também pode gostar
             </p>

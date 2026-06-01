@@ -53,7 +53,7 @@ export default async function CatalogoPage({
   return (
     <section className="container-page py-16 md:py-24">
       <header className="max-w-2xl">
-        <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.2em] text-brand-deep">
+        <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.2em] text-brand-text">
           <span className="inline-block h-px w-8 bg-brand-deep" />
           Catálogo
         </p>

@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Checkout" };
 export default function CheckoutPage() {
   return (
     <section className="container-page py-16 md:py-24">
-      <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.2em] text-brand-deep">
+      <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.2em] text-brand-text">
         <span className="inline-block h-px w-8 bg-brand-deep" />
         Checkout
       </p>

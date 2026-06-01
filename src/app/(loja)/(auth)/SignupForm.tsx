@@ -49,7 +49,7 @@ export function SignupForm({ next }: { next?: string }) {
           required
           minLength={2}
           autoComplete="name"
-          className="mt-2 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none"
+          className="mt-2 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40"
         />
       </label>
       <label className="block">
@@ -61,7 +61,7 @@ export function SignupForm({ next }: { next?: string }) {
           name="email"
           required
           autoComplete="email"
-          className="mt-2 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none"
+          className="mt-2 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40"
         />
       </label>
       <label className="block">
@@ -74,7 +74,7 @@ export function SignupForm({ next }: { next?: string }) {
           required
           minLength={6}
           autoComplete="new-password"
-          className="mt-2 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none"
+          className="mt-2 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40"
         />
         <span className="mt-1 block text-xs text-fg-subtle">
           Mínimo de 6 caracteres.

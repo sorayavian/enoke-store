@@ -6,7 +6,7 @@ export default function ClienteHomePage() {
   return (
     <div className="space-y-8">
       <div className="rounded-sm border border-line bg-surface-alt p-8">
-        <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">Bem-vindo</p>
+        <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand-text">Bem-vindo</p>
         <p className="mt-3 font-display text-display-md font-semibold text-fg">
           Sua conta está pronta.
         </p>

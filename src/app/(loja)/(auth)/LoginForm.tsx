@@ -33,7 +33,7 @@ export function LoginForm({ next }: { next?: string }) {
           name="email"
           required
           autoComplete="email"
-          className="mt-2 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none"
+          className="mt-2 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40"
         />
       </label>
       <label className="block">
@@ -45,7 +45,7 @@ export function LoginForm({ next }: { next?: string }) {
           name="password"
           required
           autoComplete="current-password"
-          className="mt-2 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none"
+          className="mt-2 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40"
         />
       </label>
 

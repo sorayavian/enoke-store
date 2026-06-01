@@ -4,9 +4,9 @@ export default function NotFound() {
   // Renderizado fora do layout da loja (herda o body global escuro), por isso
   // recebe um wrapper próprio claro para manter a identidade da loja.
   return (
-    <div className="flex min-h-screen items-center justify-center bg-surface text-fg">
+    <div className="loja-theme flex min-h-screen items-center justify-center bg-surface text-fg">
       <section className="container-page flex flex-col items-center justify-center py-24 text-center">
-        <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">Erro 404</p>
+        <p className="text-caption font-medium uppercase tracking-[0.12em] text-brand-text">Erro 404</p>
         <h1 className="mt-6 font-display text-display-xl font-light text-fg md:text-display-2xl">
           Página não <span className="italic text-brand-deep">encontrada</span>.
         </h1>

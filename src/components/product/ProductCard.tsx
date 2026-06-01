@@ -49,7 +49,7 @@ export function ProductCard({ product }: { product: Product }) {
           <p className="text-caption uppercase tracking-[0.14em] text-fg-subtle">
             {product.brand}
           </p>
-          <h3 className="mt-1.5 font-display text-xl italic text-fg transition-colors duration-feedback group-hover:text-brand-deep">
+          <h3 className="mt-1.5 font-display text-xl italic text-fg transition-colors duration-feedback group-hover:text-brand-text">
             {product.name}
           </h3>
           <p className="mt-1 text-sm text-fg-muted">{product.material}</p>

@@ -105,6 +105,17 @@ body {
   }
 }
 
+/* Foco visível por teclado em toda a loja (acessibilidade WCAG).
+   Escopado no wrapper .loja-theme para não afetar o painel admin. */
+.loja-theme a:focus-visible,
+.loja-theme button:focus-visible,
+.loja-theme [role="button"]:focus-visible,
+.loja-theme summary:focus-visible {
+  outline: 2px solid #caa20a;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

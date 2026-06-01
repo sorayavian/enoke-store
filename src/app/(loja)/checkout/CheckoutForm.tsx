@@ -67,7 +67,7 @@ export function CheckoutForm() {
               name="name"
               required
               minLength={2}
-              className="mt-1 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none"
+              className="mt-1 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40"
             />
           </label>
           <label className="block">
@@ -76,20 +76,20 @@ export function CheckoutForm() {
               type="email"
               name="email"
               required
-              className="mt-1 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none"
+              className="mt-1 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40"
             />
           </label>
           <label className="block">
             <span className="text-xs text-fg-muted">Telefone (opcional)</span>
             <input
               name="phone"
-              className="mt-1 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none"
+              className="mt-1 w-full rounded-sm border border-line bg-surface px-4 py-3 text-sm text-fg focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/40"
             />
           </label>
         </fieldset>
 
         <div className="rounded-sm border border-brand/40 bg-brand-soft/20 p-6">
-          <p className="text-xs uppercase tracking-[0.12em] text-brand-deep">Modo desenvolvimento</p>
+          <p className="text-xs uppercase tracking-[0.12em] text-brand-text">Modo desenvolvimento</p>
           <p className="mt-2 text-sm text-fg">
             O Mercado Pago será conectado na Fase 9. Por enquanto, o checkout
             simula sucesso e redireciona para a página de confirmação.

@@ -37,6 +37,9 @@ const config: Config = {
           DEFAULT: "#F1C40F",
           soft: "#F5D27A",
           deep: "#CAA20A",
+          // Dourado acessível para TEXTO PEQUENO sobre fundo claro (>= 4.5:1 WCAG AA).
+          // Use brand/brand-deep só como fundo, realce ou em texto grande (títulos).
+          text: "#8A6D0A",
           ink: "#161616",
         },
         // Superfícies da loja: claras no conteúdo, escuras no header/footer

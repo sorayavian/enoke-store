@@ -64,7 +64,7 @@ export function CartView() {
                   </p>
                   <Link
                     href={`/produto/${item.slug}`}
-                    className="font-display text-xl font-semibold text-fg hover:text-brand-deep"
+                    className="font-display text-xl font-semibold text-fg hover:text-brand-text"
                   >
                     {item.name}
                   </Link>

@@ -124,7 +124,7 @@ export default async function Home() {
       <section className="container-page py-24 md:py-32">
         <Reveal className="flex items-end justify-between gap-4">
           <div>
-            <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.2em] text-brand-deep">
+            <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.2em] text-brand-text">
               <span className="inline-block h-px w-8 bg-brand-deep" />
               Em destaque
             </p>
@@ -134,7 +134,7 @@ export default async function Home() {
           </div>
           <Link
             href="/catalogo"
-            className="hidden text-sm font-medium uppercase tracking-wide text-fg-muted transition-colors duration-feedback hover:text-brand-deep md:block"
+            className="hidden text-sm font-medium uppercase tracking-wide text-fg-muted transition-colors duration-feedback hover:text-brand-text md:block"
           >
             Ver todos →
           </Link>
@@ -148,7 +148,7 @@ export default async function Home() {
       <section className="border-y border-line bg-surface-alt py-24 md:py-32">
         <div className="container-page">
           <Reveal>
-            <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.2em] text-brand-deep">
+            <p className="flex items-center gap-3 text-caption font-medium uppercase tracking-[0.2em] text-brand-text">
               <span className="inline-block h-px w-8 bg-brand-deep" />
               Por estilo
             </p>

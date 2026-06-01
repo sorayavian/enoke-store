@@ -23,7 +23,7 @@ export default async function SignupPage({
   return (
     <section className="container-page flex min-h-[60vh] items-center justify-center py-24">
       <div className="w-full max-w-sm">
-        <p className="text-center text-caption font-medium uppercase tracking-[0.12em] text-brand-deep">
+        <p className="text-center text-caption font-medium uppercase tracking-[0.12em] text-brand-text">
           Criar conta
         </p>
         <h1 className="mt-3 text-center font-display text-display-lg font-light text-fg">
@@ -36,7 +36,7 @@ export default async function SignupPage({
           Já tem conta?{" "}
           <Link
             href={next ? `/login?next=${encodeURIComponent(next)}` : "/login"}
-            className="text-brand-deep underline underline-offset-4"
+            className="text-brand-text underline underline-offset-4"
           >
             Entrar
           </Link>

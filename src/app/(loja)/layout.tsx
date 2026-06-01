@@ -9,7 +9,7 @@ export default function LojaLayout({
   // Wrapper de tema claro: escopa a identidade da loja (claro + dourado) sem
   // afetar o painel admin, que mantém o tema escuro herdado do body global.
   return (
-    <div className="min-h-screen bg-surface text-fg">
+    <div className="loja-theme min-h-screen bg-surface text-fg">
       <Header />
       <main>{children}</main>
       <Footer />

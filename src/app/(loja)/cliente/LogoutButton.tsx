@@ -9,7 +9,7 @@ function Botao() {
     <button
       type="submit"
       disabled={pending}
-      className="text-sm text-fg-muted underline decoration-line underline-offset-4 transition-colors hover:text-brand-deep disabled:opacity-60"
+      className="text-sm text-fg-muted underline decoration-line underline-offset-4 transition-colors hover:text-brand-text disabled:opacity-60"
     >
       {pending ? "Saindo..." : "Sair"}
     </button>

@@ -181,7 +181,7 @@ export function CatalogFilters({
       <div className="pt-4">
         <Link
           href="/catalogo"
-          className="text-xs uppercase tracking-[0.12em] text-fg-muted underline decoration-line underline-offset-4 hover:text-brand-deep"
+          className="text-xs uppercase tracking-[0.12em] text-fg-muted underline decoration-line underline-offset-4 hover:text-brand-text"
         >
           Limpar filtros
         </Link>
