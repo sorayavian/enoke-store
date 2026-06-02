@@ -15,8 +15,8 @@ const CATEGORIA_IMAGENS: Record<string, string> = {
   grau: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?auto=format&fit=crop&w=900&q=80",
   // Pessoa usando óculos de sol
   sol: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=900&q=80",
-  // Criança usando óculos
-  infantil: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=900&q=80",
+  // Criança usando óculos (imagem própria, em public/)
+  infantil: "/categoria-infantil.png",
 };
 
 export default async function Home() {
