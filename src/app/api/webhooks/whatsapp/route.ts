@@ -35,12 +35,13 @@ type EvolutionPayload = {
   mensagem?: string;
 };
 
-/** Extrai { contato, texto, nome, fromMe } de qualquer formato aceito. */
+/** Extrai { contato, texto, nome, fromMe, isGroup } de qualquer formato aceito. */
 function parsePayload(body: EvolutionPayload): {
   contato: string;
   texto: string;
   nome: string | null;
   fromMe: boolean;
+  isGroup: boolean;
 } {
   // Formato simplificado para testes.
   if (body.mensagem) {
@@ -49,11 +50,14 @@ function parsePayload(body: EvolutionPayload): {
       texto: body.mensagem,
       nome: null,
       fromMe: false,
+      isGroup: false,
     };
   }
 
   const data = body.data;
   const jid = data?.key?.remoteJid ?? "";
+  // Grupos têm remoteJid terminando em "@g.us"; privados em "@s.whatsapp.net".
+  const isGroup = jid.endsWith("@g.us");
   // remoteJid vem como "5511999998888@s.whatsapp.net" → fica só o número.
   const contato = jid.split("@")[0] ?? "";
   const texto =
@@ -65,13 +69,20 @@ function parsePayload(body: EvolutionPayload): {
     texto,
     nome: data?.pushName ?? null,
     fromMe: Boolean(data?.key?.fromMe),
+    isGroup,
   };
 }
 
 export async function POST(req: Request) {
   try {
     const body = (await req.json().catch(() => ({}))) as EvolutionPayload;
-    const { contato, texto, nome, fromMe } = parsePayload(body);
+    const { contato, texto, nome, fromMe, isGroup } = parsePayload(body);
+
+    // Grupos: a IA NÃO atende grupos — apenas conversas privadas. Ignora cedo,
+    // antes de salvar ou responder qualquer coisa.
+    if (isGroup) {
+      return NextResponse.json({ ok: true, ignored: true, motivo: "grupo" });
+    }
 
     // Pings/validações sem texto, ou eco da nossa própria mensagem → ignora.
     if (!texto || fromMe) {
