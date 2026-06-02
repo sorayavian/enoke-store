@@ -9,16 +9,18 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <Link href={`/produto/${product.slug}`} className="group block">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-surface-alt">
-        {/* Imagem da frente — sempre visível. No hover, troca para a lateral
-            APENAS se o produto tiver uma segunda imagem (senão, fica nela). */}
+      <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-surface">
+        {/* Imagem INTEIRA (object-contain): o óculos nunca é cortado. O fundo do
+            card usa bg-surface (a MESMA cor do fundo da página) — assim a sobra
+            se funde com o fundo, sem moldura, nos dois temas. No hover, troca
+            para a lateral apenas se o produto tiver uma segunda imagem. */}
         <Image
           src={front}
           alt={`${product.name} — frente`}
           fill
           sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
           className={
-            "object-cover transition-transform duration-content ease-refined group-hover:scale-[1.04]" +
+            "object-contain transition-transform duration-content ease-refined group-hover:scale-[1.04]" +
             (side ? " group-hover:opacity-0" : "")
           }
         />
@@ -28,7 +30,7 @@ export function ProductCard({ product }: { product: Product }) {
             alt={`${product.name} — lateral`}
             fill
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-            className="scale-[1.04] object-cover opacity-0 transition-all duration-content ease-refined group-hover:scale-100 group-hover:opacity-100"
+            className="scale-[1.04] object-contain opacity-0 transition-all duration-content ease-refined group-hover:scale-100 group-hover:opacity-100"
           />
         )}
 

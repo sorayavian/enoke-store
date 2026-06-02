@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, Manrope } from "next/font/google";
 import "./globals.css";
 import { SITE } from "@/lib/site";
+import { themeScript } from "@/components/ui/ThemeToggle";
 
 // Display: Fraunces — serifada editorial de alto contraste, com caráter de
 // ótica de luxo. Usada nos títulos dramáticos da loja.
@@ -52,6 +53,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR" className={`${display.variable} ${sans.variable}`}>
+      <head>
+        {/* Anti-flash: aplica o tema escuro antes da primeira pintura. */}
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="min-h-screen bg-bone text-ink antialiased">{children}</body>
     </html>
   );

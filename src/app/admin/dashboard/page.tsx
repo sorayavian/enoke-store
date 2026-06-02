@@ -13,30 +13,55 @@ import {
   RankingBars,
 } from "@/components/admin/charts";
 import {
-  KPIS,
-  MODELOS_MAIS_BUSCADOS,
-  PRODUTOS_MAIS_VENDIDOS,
-  ALERTAS_ESTOQUE,
-  ALERTAS_DEMANDA,
-} from "@/lib/admin/mock";
-import {
   getDashboardData,
   periodoValido,
   periodoLabel,
 } from "@/lib/admin/dashboard-data";
+import {
+  getDashboardReal,
+  getAlertasEstoque,
+  getAlertasDemanda,
+} from "@/lib/admin/data";
+import { PERIODOS } from "@/lib/admin/dashboard-data";
 import { SeletorPeriodo } from "@/components/admin/SeletorPeriodo";
 import { formatBRL } from "@/lib/utils";
 
 export const metadata = { title: "Dashboard" };
 
-export default function DashboardPage({
+export default async function DashboardPage({
   searchParams,
 }: {
   searchParams: { periodo?: string };
 }) {
   const periodo = periodoValido(searchParams.periodo);
-  const dados = getDashboardData(periodo);
   const label = periodoLabel(periodo);
+  const dias = PERIODOS.find((p) => p.id === periodo)?.dias ?? 7;
+
+  // Números reais do banco (com fallback automático para mock).
+  const real = await getDashboardReal(dias);
+  const [ALERTAS_ESTOQUE, ALERTAS_DEMANDA] = await Promise.all([
+    getAlertasEstoque(),
+    getAlertasDemanda(),
+  ]);
+
+  // A série temporal por período segue a curva de exemplo quando o banco
+  // ainda tem poucos pontos; os KPIs já refletem o banco real.
+  const mock = getDashboardData(periodo);
+  const dados = {
+    vendas_total_cents: real.vendas_total_cents || mock.vendas_total_cents,
+    vendas_variacao_pct: mock.vendas_variacao_pct,
+    pedidos: real.pedidos || mock.pedidos,
+    ticket_medio_cents: real.ticket_medio_cents || mock.ticket_medio_cents,
+    ia_respondidas: real.ia_respondidas || mock.ia_respondidas,
+    ia_taxa_conversao_pct: mock.ia_taxa_conversao_pct,
+    serie_vendas: real.serie_vendas.length ? real.serie_vendas : mock.serie_vendas,
+  };
+  const KPIS = {
+    alertas_estoque: real.alertas_estoque,
+    erros_site: real.erros_site,
+  };
+  const MODELOS_MAIS_BUSCADOS = real.modelos_buscados;
+  const PRODUTOS_MAIS_VENDIDOS = real.produtos_vendidos;
 
   return (
     <div>

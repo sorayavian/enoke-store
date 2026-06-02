@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ShoppingBag, User, Search } from "lucide-react";
 import { NAV } from "@/lib/site";
 import { Logo } from "@/components/brand/Logo";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { getClienteAtual } from "@/lib/auth/session";
 
 export async function Header() {
@@ -29,6 +30,7 @@ export async function Header() {
         </div>
 
         <div className="flex items-center gap-1">
+          <ThemeToggle />
           <Link
             href="/catalogo"
             aria-label="Buscar"

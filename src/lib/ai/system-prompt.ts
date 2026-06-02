@@ -62,4 +62,4 @@ export const SYSTEM_PROMPT = `Você é a assistente virtual da ${SITE.fullName},
 - Nunca invente preços ou disponibilidade que você não tenha certeza; ofereça
   verificar com a equipe.`;
 
-export const AI_MODEL = "claude-sonnet-4-20250514";
+export const AI_MODEL = "claude-sonnet-4-6";

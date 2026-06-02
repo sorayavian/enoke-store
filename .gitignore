@@ -27,6 +27,10 @@ yarn-error.log*
 
 # local env files
 .env*.local
+# env da stack Evolution (contém apikey)
+/evolution/.env
+# QR code da sessão de WhatsApp (não publicar)
+/evolution/qrcode.html
 
 # vercel
 .vercel

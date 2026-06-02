@@ -1,6 +1,8 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  // Dark mode por classe — só a loja recebe a classe .dark (escopada).
+  darkMode: "class",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -32,34 +34,38 @@ const config: Config = {
         danger: "#7A2E22",
 
         // --- Identidade da loja (claro + dourado), fiel ao enoke.com.br ---
-        // Dourado da marca (usar como fundo/realce; nunca como texto pequeno sobre branco)
+        // Os tokens da loja usam CSS variables (definidas em globals.css sob
+        // .loja-theme e .loja-theme.dark) para suportar dark mode sem reescrever
+        // as classes nas páginas. O dourado da marca é igual nos dois temas;
+        // brand-text troca (mais claro no escuro) para manter contraste.
         brand: {
           DEFAULT: "#F1C40F",
           soft: "#F5D27A",
           deep: "#CAA20A",
-          // Dourado acessível para TEXTO PEQUENO sobre fundo claro (>= 4.5:1 WCAG AA).
-          // Use brand/brand-deep só como fundo, realce ou em texto grande (títulos).
-          text: "#8A6D0A",
+          // Dourado acessível para texto pequeno — varia por tema (ver globals.css).
+          text: "var(--brand-text)",
           ink: "#161616",
         },
-        // Superfícies da loja: claras no conteúdo, escuras no header/footer
+        // Superfícies da loja. surface/surface-alt trocam por tema;
+        // surface-dark/darkAlt são SEMPRE escuras (header/footer/blocos de impacto).
         surface: {
-          DEFAULT: "#FFFFFF",
-          alt: "#FAF9F7",
+          DEFAULT: "var(--surface)",
+          alt: "var(--surface-alt)",
           dark: "#161616",
           darkAlt: "#1A1A1A",
         },
-        // Texto da loja
+        // Texto da loja. fg/muted/subtle trocam por tema; onDark/onDarkMuted são
+        // para texto sobre blocos sempre-escuros (não trocam).
         fg: {
-          DEFAULT: "#161616",
-          muted: "#5B5B5B",
-          subtle: "#8A8A8A",
+          DEFAULT: "var(--fg)",
+          muted: "var(--fg-muted)",
+          subtle: "var(--fg-subtle)",
           onDark: "#FAF9F7",
           onDarkMuted: "#A8A8A8",
         },
-        // Linhas/divisórias da loja
+        // Linhas/divisórias da loja. line troca por tema; line-dark é fixa.
         line: {
-          DEFAULT: "#E7E4DF",
+          DEFAULT: "var(--line)",
           dark: "#2A2A2A",
         },
       },

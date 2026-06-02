@@ -10,6 +10,30 @@
   --mist: #44444B;
 }
 
+/* ─────────── Tokens da loja (suportam dark mode) ─────────── */
+/* Tema CLARO (padrão da loja) */
+.loja-theme {
+  --surface: #ffffff;
+  --surface-alt: #faf9f7;
+  --fg: #161616;
+  --fg-muted: #5b5b5b;
+  --fg-subtle: #8a8a8a;
+  --line: #e7e4df;
+  --brand-text: #8a6d0a; /* dourado acessível sobre claro */
+}
+
+/* Tema ESCURO da loja — paleta espelhada com cuidado de contraste.
+   A classe .dark é aplicada no <html> pelo toggle/script anti-flash. */
+html.dark .loja-theme {
+  --surface: #121214; /* fundo principal escuro */
+  --surface-alt: #1b1b1f; /* cards/blocos */
+  --fg: #f2efea; /* texto principal claro */
+  --fg-muted: #a8a8ad; /* texto secundário */
+  --fg-subtle: #7c7c82; /* texto terciário */
+  --line: #2c2c31; /* divisórias */
+  --brand-text: #f1c40f; /* dourado vibrante (legível sobre escuro) */
+}
+
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
