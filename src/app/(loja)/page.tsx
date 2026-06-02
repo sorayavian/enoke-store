@@ -8,6 +8,17 @@ import { SITE } from "@/lib/site";
 
 export const revalidate = 600;
 
+// Imagens de fundo dos cards de categoria, por slug. Fotos do Unsplash
+// (uso livre, comercial, sem atribuição). Trocar por fotos próprias quando tiver.
+const CATEGORIA_IMAGENS: Record<string, string> = {
+  // Pessoa usando óculos de grau
+  grau: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?auto=format&fit=crop&w=900&q=80",
+  // Pessoa usando óculos de sol
+  sol: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=900&q=80",
+  // Criança usando óculos
+  infantil: "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=900&q=80",
+};
+
 export default async function Home() {
   const [featured, categories] = await Promise.all([
     getFeaturedProducts(8),
@@ -80,16 +91,26 @@ export default async function Home() {
                   href={`/catalogo?categoria=${c.slug}`}
                   className="group relative block aspect-[4/5] overflow-hidden rounded-sm border border-line bg-surface"
                 >
-                  <span className="absolute right-5 top-5 z-10 font-display text-2xl italic text-line transition-colors duration-content group-hover:text-brand">
+                  {/* Imagem de fundo por categoria (Unsplash — uso livre). */}
+                  <Image
+                    src={CATEGORIA_IMAGENS[c.slug] ?? CATEGORIA_IMAGENS.grau}
+                    alt={c.name}
+                    fill
+                    sizes="(min-width: 768px) 33vw, 100vw"
+                    className="object-cover transition-transform duration-content ease-refined group-hover:scale-[1.04]"
+                  />
+                  {/* Gradiente escuro para o texto ficar legível sobre a foto. */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-black/10" />
+                  <span className="absolute right-5 top-5 z-10 font-display text-2xl italic text-white/70 transition-colors duration-content group-hover:text-brand">
                     0{i + 1}
                   </span>
                   <div className="absolute inset-0 flex flex-col justify-end p-8">
                     <span className="mb-3 h-px w-12 bg-brand transition-all duration-content group-hover:w-20" />
-                    <p className="font-display text-display-md text-fg transition-transform duration-content ease-refined group-hover:-translate-y-1">
+                    <p className="font-display text-display-md text-white transition-transform duration-content ease-refined group-hover:-translate-y-1">
                       {c.name}
                     </p>
                     {c.description && (
-                      <p className="mt-2 max-w-xs text-sm text-fg-muted">
+                      <p className="mt-2 max-w-xs text-sm text-white/80">
                         {c.description}
                       </p>
                     )}
