@@ -70,15 +70,26 @@ export function ProdutoForm({ produto }: { produto?: Product }) {
     if (!arquivos.length) return;
     setErro(null);
     setEnviando(true);
-    for (const arquivo of arquivos) {
-      const fd = new FormData();
-      fd.append("file", arquivo);
-      const r = await uploadImagem(fd);
-      if (r.ok && r.url) setImagens((a) => [...a, r.url!]);
-      else setErro(r.erro ?? "Falha no upload da imagem.");
+    try {
+      for (const arquivo of arquivos) {
+        // Valida o tamanho no cliente para dar erro claro (antes era só no server).
+        if (arquivo.size > 5 * 1024 * 1024) {
+          setErro(`"${arquivo.name}" tem mais de 5 MB. Reduza a imagem e tente de novo.`);
+          continue;
+        }
+        const fd = new FormData();
+        fd.append("file", arquivo);
+        const r = await uploadImagem(fd);
+        if (r.ok && r.url) setImagens((a) => [...a, r.url!]);
+        else setErro(r.erro ?? "Falha no upload da imagem.");
+      }
+    } catch (err) {
+      // Sem isto, uma exceção deixaria o botão "carregando" para sempre.
+      setErro((err as Error).message || "Erro inesperado no upload.");
+    } finally {
+      setEnviando(false);
+      e.target.value = "";
     }
-    setEnviando(false);
-    e.target.value = "";
   }
 
   function adicionarUrl() {

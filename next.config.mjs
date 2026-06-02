@@ -10,6 +10,14 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Server Actions têm limite de body de 1 MB por padrão — pequeno para upload
+  // de imagem de produto (fotos de celular passam disso). Sobe para 6 MB,
+  // coerente com o limite de 5 MB validado no upload.
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "6mb",
+    },
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     // Libera o Storage do Supabase e também URLs externas coladas no cadastro.
