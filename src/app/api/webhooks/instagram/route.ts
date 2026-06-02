@@ -6,6 +6,7 @@ import {
   escalarConversa,
 } from "@/lib/messages/store";
 import { enviarInstagram } from "@/lib/messages/instagram";
+import { AUTO_REPLY_GLOBAL_ON } from "@/lib/ai/config";
 
 /**
  * POST /api/webhooks/instagram — recebe eventos da Meta Graph API (DMs).
@@ -67,14 +68,14 @@ export async function POST(req: Request) {
       classification: classificacao,
     });
 
-    if (!conversa.ai_enabled) {
+    if (!AUTO_REPLY_GLOBAL_ON || !conversa.ai_enabled) {
       return NextResponse.json({
         ok: true,
         source: "ig",
         contato,
         classificacao,
         respondido_pela_ia: false,
-        motivo: "ai_disabled",
+        motivo: !AUTO_REPLY_GLOBAL_ON ? "ai_global_off" : "ai_disabled",
       });
     }
 

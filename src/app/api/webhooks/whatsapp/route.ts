@@ -6,6 +6,7 @@ import {
   escalarConversa,
 } from "@/lib/messages/store";
 import { enviarWhatsApp } from "@/lib/messages/evolution";
+import { AUTO_REPLY_GLOBAL_ON } from "@/lib/ai/config";
 
 /**
  * POST /api/webhooks/whatsapp — recebe eventos da Evolution API.
@@ -89,15 +90,15 @@ export async function POST(req: Request) {
       classification: classificacao,
     });
 
-    // 2. IA desligada nesta conversa → só registra, atendente humano responde.
-    if (!conversa.ai_enabled) {
+    // 2. IA desligada (global OU nesta conversa) → só registra; humano responde.
+    if (!AUTO_REPLY_GLOBAL_ON || !conversa.ai_enabled) {
       return NextResponse.json({
         ok: true,
         source: "wa",
         contato,
         classificacao,
         respondido_pela_ia: false,
-        motivo: "ai_disabled",
+        motivo: !AUTO_REPLY_GLOBAL_ON ? "ai_global_off" : "ai_disabled",
       });
     }
 
