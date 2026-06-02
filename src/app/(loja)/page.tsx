@@ -88,7 +88,11 @@ export default async function Home() {
             {categories.map((c, i) => (
               <Reveal as="article" key={c.id} delay={i * 110}>
                 <Link
-                  href={`/catalogo?categoria=${c.slug}`}
+                  href={
+                    c.slug === "grau" || c.slug === "sol"
+                      ? `/catalogo?tipo=${c.slug}`
+                      : `/catalogo?categoria=${c.slug}`
+                  }
                   className="group relative block aspect-[4/5] overflow-hidden rounded-sm border border-line bg-surface"
                 >
                   {/* Imagem de fundo por categoria (Unsplash — uso livre). */}

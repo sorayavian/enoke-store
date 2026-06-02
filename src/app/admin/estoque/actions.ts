@@ -129,6 +129,16 @@ export async function criarProduto(formData: FormData): Promise<ResultadoAcao> {
   };
 
   const sb = createSupabaseServiceClient();
+
+  // Liga o produto à categoria certa pelo tipo (sol → "sol", grau/ambos → "grau").
+  const categoriaSlug = tipo === "sol" ? "sol" : "grau";
+  const { data: cat } = await sb
+    .from("categories")
+    .select("id")
+    .eq("slug", categoriaSlug)
+    .maybeSingle();
+  const categoryId = (cat as { id: string } | null)?.id ?? null;
+
   const { error } = await sb.from("products").insert({
     slug: slugify(`${name}-${code}`),
     code,
@@ -140,6 +150,7 @@ export async function criarProduto(formData: FormData): Promise<ResultadoAcao> {
     stock,
     images,
     specs,
+    category_id: categoryId,
     is_active: true,
   } as never);
 

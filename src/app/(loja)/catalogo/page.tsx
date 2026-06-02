@@ -30,6 +30,7 @@ function parseFilters(sp: SearchParams): ProductFilters {
     estilo: pick("estilo"),
     genero: pick("genero") as ProductFilters["genero"],
     tipo: pick("tipo") as ProductFilters["tipo"],
+    categoria: pick("categoria"),
     marca: pick("marca"),
     material: pick("material"),
     preco_min: pick("preco_min") ? Number(pick("preco_min")) : undefined,

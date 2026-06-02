@@ -13,5 +13,5 @@ export const NAV = [
   { href: "/catalogo", label: "Catálogo" },
   { href: "/catalogo?genero=feminino", label: "Feminino" },
   { href: "/catalogo?genero=masculino", label: "Masculino" },
-  { href: "/catalogo?estilo=sol", label: "Solares" },
+  { href: "/catalogo?tipo=sol", label: "Solares" },
 ] as const;

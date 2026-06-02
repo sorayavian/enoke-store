@@ -20,8 +20,8 @@ export function Footer() {
           </p>
           <ul className="mt-4 space-y-2 text-sm text-fg-onDarkMuted">
             <li><Link href="/catalogo" className="transition-colors hover:text-brand">Catálogo</Link></li>
-            <li><Link href="/catalogo?estilo=sol" className="transition-colors hover:text-brand">Óculos de Sol</Link></li>
-            <li><Link href="/catalogo?estilo=grau" className="transition-colors hover:text-brand">Óculos de Grau</Link></li>
+            <li><Link href="/catalogo?tipo=sol" className="transition-colors hover:text-brand">Óculos de Sol</Link></li>
+            <li><Link href="/catalogo?tipo=grau" className="transition-colors hover:text-brand">Óculos de Grau</Link></li>
           </ul>
         </div>
 

@@ -18,6 +18,7 @@ export type ProductFilters = {
   estilo?: string;
   genero?: "feminino" | "masculino" | "unissex";
   tipo?: "grau" | "sol" | "ambos";
+  categoria?: string; // slug da categoria (grau | sol | infantil)
   marca?: string;
   material?: string;
   preco_min?: number; // em reais
@@ -129,6 +130,12 @@ function matchesFilters(p: Product, f: ProductFilters): boolean {
   }
   if (f.tipo) {
     const ok = s.tipo === f.tipo || s.tipo === "ambos";
+    if (!ok) return false;
+  }
+  // Categoria grau/sol equivale ao tipo; "infantil" não tem tipo próprio,
+  // então não restringe por aqui (a curadoria infantil é tratada à parte).
+  if (f.categoria === "grau" || f.categoria === "sol") {
+    const ok = s.tipo === f.categoria || s.tipo === "ambos";
     if (!ok) return false;
   }
   if (f.marca && p.brand !== f.marca) return false;
