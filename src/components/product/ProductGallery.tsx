@@ -35,12 +35,14 @@ export function ProductGallery({
               alt=""
               fill
               sizes="80px"
-              className="object-cover"
+              className="object-contain"
             />
           </button>
         ))}
       </div>
-      <div className="relative order-1 aspect-[4/5] w-full overflow-hidden rounded-sm bg-surface-alt md:order-2">
+      {/* Imagem INTEIRA (object-contain): o óculos nunca é cortado. Fundo
+          bg-surface (cor da página) para a sobra se fundir sem moldura. */}
+      <div className="relative order-1 aspect-[4/5] w-full overflow-hidden rounded-sm bg-surface md:order-2">
         <Image
           key={main}
           src={main}
@@ -48,7 +50,7 @@ export function ProductGallery({
           fill
           priority
           sizes="(min-width: 1024px) 50vw, 100vw"
-          className="animate-[fadein_320ms_ease-out] object-cover"
+          className="animate-[fadein_320ms_ease-out] object-contain"
         />
       </div>
       <style jsx>{`
