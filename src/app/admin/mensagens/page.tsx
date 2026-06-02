@@ -1,10 +1,16 @@
 import { Card, CardTitle } from "@/components/admin/ui";
 import { DonutBreakdown, RankingBars } from "@/components/admin/charts";
 import { MensagensClient } from "./MensagensClient";
+import { AutoRefresh } from "@/components/admin/AutoRefresh";
 import { getConversas, getMensagens, getMensagensStats } from "@/lib/admin/data";
 import type { Message } from "@/lib/admin/types";
 
 export const metadata = { title: "Mensagens" };
+
+// Sempre busca dados frescos do banco (sem cache estático): mensagens novas
+// que chegam pelos webhooks aparecem ao recarregar/revalidar.
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function MensagensPage() {
   const [CONVERSAS, MENSAGENS, MENSAGENS_STATS] = await Promise.all([
@@ -29,6 +35,8 @@ export default async function MensagensPage() {
 
   return (
     <div>
+      {/* Atualiza as conversas automaticamente a cada 20s. */}
+      <AutoRefresh segundos={20} />
       <div className="mb-6">
         <h1 className="font-display text-display-lg text-ink-deep">Mensagens</h1>
         <p className="mt-1 text-sm text-stone-300">
