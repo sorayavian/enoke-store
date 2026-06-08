@@ -1,22 +1,25 @@
 import "server-only";
 
 /**
- * Cliente da Meta Graph API (Instagram DMs).
+ * Cliente do Instagram (DMs) via Instagram Login / Graph API do Instagram.
  *
- * Envia respostas de texto às DMs. Requer no .env:
- *   META_GRAPH_TOKEN     — token de acesso da página/conta Instagram business
- *   IG_BUSINESS_ID       — id da conta Instagram business (opcional para envio via /me/messages)
+ * Usa graph.instagram.com (NÃO graph.facebook.com): o token do Instagram Login
+ * (prefixo "IGAA...") só é aceito nesse host. O envio é em /me/messages com o
+ * token como query param.
  *
- * Está PRONTO mas desativado até a conta Meta ser conectada: sem token,
- * `enviarInstagram` apenas loga e retorna false.
+ * Requer no .env:
+ *   META_GRAPH_TOKEN  — token de acesso da conta Instagram business
+ *
+ * Sem token, `enviarInstagram` apenas loga e retorna false.
  */
 
 export const INSTAGRAM_CONFIGURED = Boolean(process.env.META_GRAPH_TOKEN);
 
 const GRAPH_VERSION = "v21.0";
+const GRAPH_HOST = "https://graph.instagram.com";
 
 /**
- * Envia uma mensagem de texto para um usuário do Instagram via Graph API.
+ * Envia uma mensagem de texto para um usuário do Instagram.
  * `igsid` é o ID do remetente (Instagram-scoped ID) recebido no webhook.
  */
 export async function enviarInstagram(
@@ -28,14 +31,13 @@ export async function enviarInstagram(
     return false;
   }
 
-  const url = `https://graph.facebook.com/${GRAPH_VERSION}/me/messages`;
+  const url = `${GRAPH_HOST}/${GRAPH_VERSION}/me/messages?access_token=${encodeURIComponent(
+    process.env.META_GRAPH_TOKEN!
+  )}`;
   try {
     const resp = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.META_GRAPH_TOKEN!}`,
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         recipient: { id: igsid },
         message: { text: texto },
