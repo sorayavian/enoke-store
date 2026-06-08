@@ -1,21 +1,26 @@
 import { NextResponse } from "next/server";
-import { SUPABASE_WRITE_CONFIGURED } from "@/lib/supabase/is-configured";
-import { createSupabaseServiceClient } from "@/lib/supabase/service";
 
 // DIAGNÓSTICO TEMPORÁRIO — remover depois.
+// Verifica se a conta IG está inscrita nos webhooks do app (subscribed_apps)
+// e quais campos. Usa graph.instagram.com com o token da conta.
 export async function GET() {
-  if (!SUPABASE_WRITE_CONFIGURED) {
-    return NextResponse.json({ erro: "SUPABASE_WRITE não configurado" });
+  const tok = process.env.META_GRAPH_TOKEN;
+  if (!tok) return NextResponse.json({ erro: "sem META_GRAPH_TOKEN" });
+
+  async function get(path: string) {
+    try {
+      const r = await fetch(
+        `https://graph.instagram.com/v21.0/${path}${path.includes("?") ? "&" : "?"}access_token=${encodeURIComponent(tok!)}`,
+        { cache: "no-store" }
+      );
+      return await r.json();
+    } catch (e) {
+      return { erro_fetch: (e as Error).message };
+    }
   }
-  const sb = createSupabaseServiceClient();
-  const msg = await sb
-    .from("messages")
-    .select("customer_contact, content, direction, created_at")
-    .eq("source", "ig")
-    .order("created_at", { ascending: false })
-    .limit(8);
-  return NextResponse.json({
-    mensagens_ig: msg.data ?? [],
-    erro: msg.error?.message ?? null,
-  });
+
+  const me = await get("me?fields=id,username,user_id");
+  const subscribed = await get("me/subscribed_apps");
+
+  return NextResponse.json({ me, subscribed });
 }
