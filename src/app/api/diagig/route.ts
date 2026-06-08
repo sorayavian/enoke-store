@@ -3,20 +3,21 @@ import { SUPABASE_WRITE_CONFIGURED } from "@/lib/supabase/is-configured";
 import { createSupabaseServiceClient } from "@/lib/supabase/service";
 
 // DIAGNÓSTICO TEMPORÁRIO — remover depois.
+// Mostra os payloads brutos que a Meta enviou ao webhook do Instagram.
 export async function GET() {
   if (!SUPABASE_WRITE_CONFIGURED) {
     return NextResponse.json({ erro: "SUPABASE_WRITE não configurado" });
   }
   const sb = createSupabaseServiceClient();
-  const msg = await sb
-    .from("messages")
-    .select("customer_contact, content, direction, created_at")
-    .eq("source", "ig")
-    .order("created_at", { ascending: false })
+  const debug = await sb
+    .from("site_errors")
+    .select("description, detected_at")
+    .eq("type", "ig_webhook_debug")
+    .order("detected_at", { ascending: false })
     .limit(10);
   return NextResponse.json({
-    total: msg.data?.length ?? 0,
-    mensagens_ig: msg.data ?? [],
-    erro: msg.error?.message ?? null,
+    chamadas_recebidas: debug.data?.length ?? 0,
+    payloads: debug.data ?? [],
+    erro: debug.error?.message ?? null,
   });
 }
