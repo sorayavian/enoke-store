@@ -68,23 +68,6 @@ export async function POST(req: Request) {
     const body = (await req.json().catch(() => ({}))) as MetaPayload;
     const { contato, texto, isEcho } = parsePayload(body);
 
-    // DEBUG TEMPORÁRIO: registra payload + o que foi extraído. Remover depois.
-    try {
-      const { SUPABASE_WRITE_CONFIGURED } = await import("@/lib/supabase/is-configured");
-      if (SUPABASE_WRITE_CONFIGURED) {
-        const { createSupabaseServiceClient } = await import("@/lib/supabase/service");
-        const sb = createSupabaseServiceClient();
-        await sb.from("site_errors").insert({
-          type: "ig_webhook_debug",
-          path: "/api/webhooks/instagram",
-          description: `extraido[contato=${contato}|texto=${texto}|echo=${isEcho}] :: ${JSON.stringify(body).slice(0, 600)}`,
-          severity: "baixa",
-        } as never);
-      }
-    } catch {
-      // ignora
-    }
-
     // Sem texto, ou eco da nossa própria mensagem → ignora.
     if (!texto || isEcho) {
       return NextResponse.json({ ok: true, ignored: true });
