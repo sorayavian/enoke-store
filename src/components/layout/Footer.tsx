@@ -42,6 +42,9 @@ export function Footer() {
           <p>© {year} {SITE.fullName}. Todos os direitos reservados.</p>
           <div className="flex items-center gap-4">
             <span>{SITE.email}</span>
+            <Link href="/privacidade" className="transition-colors hover:text-brand">
+              Política de Privacidade
+            </Link>
             {/* Acesso ao painel administrativo (uso interno do dono) */}
             <Link href="/admin" className="transition-colors hover:text-brand">
               Painel administrativo
