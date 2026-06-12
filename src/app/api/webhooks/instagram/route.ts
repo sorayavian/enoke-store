@@ -16,20 +16,31 @@ import { AUTO_REPLY_GLOBAL_ON } from "@/lib/ai/config";
  * O envio fica inativo até META_GRAPH_TOKEN ser configurado.
  */
 
+type MsgValue = {
+  sender?: { id?: string };
+  message?: { text?: string; is_echo?: boolean };
+};
+
 type MetaPayload = {
   object?: string;
   entry?: Array<{
-    messaging?: Array<{
-      sender?: { id?: string };
-      message?: { text?: string; is_echo?: boolean };
-    }>;
+    // Formato Messenger clássico: entry[].messaging[]
+    messaging?: Array<MsgValue>;
+    // Formato Instagram (Graph API do Instagram): entry[].changes[].value
+    changes?: Array<{ field?: string; value?: MsgValue }>;
   }>;
   // Formato simplificado (testes manuais): { contato, mensagem }
   contato?: string;
   mensagem?: string;
 };
 
-/** Extrai { contato, texto, isEcho } do payload da Meta ou do formato simples. */
+/**
+ * Extrai { contato, texto, isEcho } do payload. Aceita os DOIS formatos que a
+ * Meta usa para DMs do Instagram:
+ *  - Messenger:  entry[].messaging[].message
+ *  - Instagram:  entry[].changes[].value.message   (campo "messages")
+ * Também aceita o formato simplificado dos testes manuais.
+ */
 function parsePayload(body: MetaPayload): {
   contato: string;
   texto: string;
@@ -38,11 +49,17 @@ function parsePayload(body: MetaPayload): {
   if (body.mensagem) {
     return { contato: body.contato ?? "", texto: body.mensagem, isEcho: false };
   }
-  const messaging = body.entry?.[0]?.messaging?.[0];
+
+  const entry = body.entry?.[0];
+
+  // Instagram: changes[].value (campo "messages")
+  const change = entry?.changes?.find((c) => c.field === "messages") ?? entry?.changes?.[0];
+  const val: MsgValue | undefined = change?.value ?? entry?.messaging?.[0];
+
   return {
-    contato: messaging?.sender?.id ?? "",
-    texto: messaging?.message?.text ?? "",
-    isEcho: Boolean(messaging?.message?.is_echo),
+    contato: val?.sender?.id ?? "",
+    texto: val?.message?.text ?? "",
+    isEcho: Boolean(val?.message?.is_echo),
   };
 }
 
@@ -50,6 +67,23 @@ export async function POST(req: Request) {
   try {
     const body = (await req.json().catch(() => ({}))) as MetaPayload;
     const { contato, texto, isEcho } = parsePayload(body);
+
+    // DEBUG TEMPORÁRIO: registra payload + o que foi extraído. Remover depois.
+    try {
+      const { SUPABASE_WRITE_CONFIGURED } = await import("@/lib/supabase/is-configured");
+      if (SUPABASE_WRITE_CONFIGURED) {
+        const { createSupabaseServiceClient } = await import("@/lib/supabase/service");
+        const sb = createSupabaseServiceClient();
+        await sb.from("site_errors").insert({
+          type: "ig_webhook_debug",
+          path: "/api/webhooks/instagram",
+          description: `extraido[contato=${contato}|texto=${texto}|echo=${isEcho}] :: ${JSON.stringify(body).slice(0, 600)}`,
+          severity: "baixa",
+        } as never);
+      }
+    } catch {
+      // ignora
+    }
 
     // Sem texto, ou eco da nossa própria mensagem → ignora.
     if (!texto || isEcho) {
