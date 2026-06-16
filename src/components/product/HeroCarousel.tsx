@@ -13,32 +13,36 @@ import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 type Slide = {
   image: string;
   alt: string;
-  // object-position prioriza os óculos quando a imagem precisa ser cortada
-  // para preencher todo o hero (object-cover).
-  pos: string;
+  // Dimensões reais da imagem — o slide assume essa proporção, então a imagem
+  // aparece INTEIRA (sem corte) e sem faixas, adaptando-se a cada resolução.
+  w: number;
+  h: number;
 };
 
 const SLIDES: Slide[] = [
   {
     image: "/carrossel/01-otica-online.png",
     alt: "Modelo usando óculos de sol Enoke — sua ótica on-line",
-    // Alinha pelo topo para o logo "Enoke" (canto superior) não ser cortado.
-    pos: "center top",
+    w: 1366,
+    h: 768,
   },
   {
     image: "/carrossel/02-mood.png",
     alt: "Vários óculos Enoke — um óculos para cada mood",
-    pos: "center 55%",
+    w: 1080,
+    h: 1080,
   },
   {
     image: "/carrossel/03-armacoes-crop.png",
     alt: "Modelos de armação Enoke — encontre o ideal para você",
-    pos: "center center",
+    w: 1080,
+    h: 607,
   },
   {
     image: "/carrossel/05-marca.png",
     alt: "Enoke Eyewear Store",
-    pos: "center center",
+    w: 1050,
+    h: 600,
   },
 ];
 
@@ -154,19 +158,19 @@ export function HeroCarousel() {
             aria-hidden={ativo !== i}
             className="relative w-full shrink-0 snap-center"
           >
-            {/* Altura do hero — preenche o espaço; object-cover + posição
-                priorizando os óculos para não cortá-los. */}
-            <div className="relative h-[48vw] max-h-[560px] min-h-[300px] w-full">
-              <Image
-                src={s.image}
-                alt={s.alt}
-                fill
-                priority={i === 0}
-                sizes="100vw"
-                style={{ objectPosition: s.pos }}
-                className="object-cover"
-              />
-            </div>
+            {/* O slide assume a proporção real da imagem (aspect-ratio), então
+                a imagem aparece INTEIRA, sem corte e sem faixas, ajustando-se
+                a qualquer resolução. */}
+            <Image
+              src={s.image}
+              alt={s.alt}
+              width={s.w}
+              height={s.h}
+              priority={i === 0}
+              sizes="100vw"
+              className="h-auto w-full bg-surface-dark"
+              style={{ aspectRatio: `${s.w} / ${s.h}` }}
+            />
           </div>
         ))}
       </div>
